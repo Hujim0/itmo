@@ -108,14 +108,10 @@ cp delcatty3 murkrow9/shinxdelcatty
 
 #Четвертый шаг
 
-wc -l murkrow9/* | sort -nr
+wc -l murkrow9/* > wc_tmp
+sort -nr wc_tmp
 
 ls -A --sort=none zweilous1/
-
-#grep -ins 'e' hoppip4/staraptor
-cat -ns hoppip4/staraptor
-cat -ns murkrow9/sunkern
-
 
 ls -lt hoppip4/
 

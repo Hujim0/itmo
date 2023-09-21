@@ -1,5 +1,5 @@
-#rm -r lab0
-bash clean.sh
+#!/bin/bash
+
 mkdir lab0
 cd lab0
 
@@ -89,18 +89,20 @@ chmod 777 armaldo
 chmod 512 vanillite
 cd ..
 #Третий шаг
+chmod -R 777 ../lab0
 
 cp duskull8 murkrow9/zubat/
 
-ln -sr duskull8 murkrow9/shinxduskull
+ln -s duskull8 murkrow9/shinxduskull
 
 cat hoppip4/staraptor murkrow9/sunkern >> delcatty3_22
 
+chmod -R 777 hoppip4
 cp -r hoppip4 tmp
 cp -r tmp hoppip4/cherubi
 rm -rf tmp
 
-ln -sr zweilous1 Copy_7
+ln -s zweilous1 Copy_7
 
 ln delcatty3 hoppip4/staraptordelcatty
 
@@ -108,7 +110,7 @@ cp delcatty3 murkrow9/shinxdelcatty
 
 #Четвертый шаг
 
-wc -l murkrow9/* >&2 | sort -nr 
+wc -l murkrow9/* >&2 | sort -nr
 
 ls -A --sort=none zweilous1/ 2>/dev/null
 
@@ -118,9 +120,12 @@ ls -ltc hoppip4/ 2>/dev/null
 
 cat murkrow9/* | grep 'g\>$' 2>&1
 
-wc -l murkrow9/sunkern murkrow9/shinx >> ../../tmp 2>/dev/null
+mkdir tmp
+wc -l murkrow9/sunkern murkrow9/shinx >> /tmp/tmp 2>/dev/null
 
 #Пятый шаг
+
+chmod -R 777 ../lab0
 
 rm -f duskull8
 rm -f zweilous/golbat
@@ -130,5 +135,3 @@ rm -f zweilous1/Copy_7
 rm -rf hoppip4/*
 
 rmdir hoppip4
-
-cd ..

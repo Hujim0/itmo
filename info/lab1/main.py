@@ -56,7 +56,7 @@ def change_notation(number: str, prev_notation, new_notation):
             frac_part -= math.floor(frac_part)
             frac_part = (frac_part * notation)
 
-            tmp += str(int(math.floor(frac_part)))
+            tmp += str_to_int_table[int(math.floor(frac_part))]
             if frac_part - math.floor(frac_part) == 0.0:
                 break
 

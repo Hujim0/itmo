@@ -1,0 +1,431 @@
+Main.java:
+
+     1	import Pokemons.*;
+     2	import ru.ifmo.se.pokemon.*;
+     3	
+     4	public class Main {
+     5	    public static void main(String[] args) {
+     6	        Battle battle = new Battle();
+     7	        Pokemon togedemaru = new Togedemaru("togedemaru", 1);
+     8	        Pokemon eevee = new Eevee("eevee", 1);
+     9	        Pokemon umbreon = new Umbreon("umbreon", 1);
+    10	        Pokemon nidoranF = new NidoranF("nidoranF", 1);
+    11	        Pokemon nidorina = new Nidorina("nidorina", 1);
+    12	        Pokemon nidoqueen = new Nidoqueen("nidoqueen", 1);
+    13	
+    14	        battle.addAlly(togedemaru);
+    15	        battle.addAlly(eevee);
+    16	        battle.addAlly(umbreon);
+    17	
+    18	        battle.addFoe(nidoranF);
+    19	        battle.addFoe(nidorina);
+    20	        battle.addFoe(nidoqueen);
+    21	
+    22	        battle.go();
+    23	    }
+    24	}
+---------------------------------------------------------
+Moves/Eevee/BabyDollEyes.java:
+
+     1	package Moves.Eevee;
+     2	
+     3	import ru.ifmo.se.pokemon.*;
+     4	
+     5	public class BabyDollEyes extends StatusMove {
+     6	
+     7	    public BabyDollEyes(double pow, double acc) {
+     8	        super(Type.FAIRY, pow, acc);
+     9	
+    10	        super.priority = 1;
+    11	    }
+    12	
+    13	    @Override
+    14	    protected void applyOppEffects(Pokemon pokemon) {
+    15	        pokemon.setMod(Stat.ATTACK, -1);
+    16	    }
+    17	
+    18	    @Override
+    19	    public String describe() {
+    20	        return "Eevee stares at the target with its baby-doll eyes, which lowers its Attack stat. This move always goes first.";
+    21	    }
+    22	}
+
+---------------------------------------------------------
+Moves/Eevee/ShadowBall.java:
+
+     1	package Moves.Eevee;
+     2	
+     3	import ru.ifmo.se.pokemon.*;
+     4	
+     5	public class ShadowBall extends SpecialMove {
+     6	
+     7	    public ShadowBall(double pow, double acc) {
+     8	        super(Type.GHOST, pow, acc);
+     9	    }
+    10	
+    11	    @Override
+    12	    protected void applyOppEffects(Pokemon pokemon) {
+    13	        pokemon.addEffect(new Effect().chance(0.2).stat(Stat.SPECIAL_DEFENSE, -1));
+    14	    }
+    15	
+    16	    @Override
+    17	    public String describe() {
+    18	        return "Eevee hurls a shadowy blob at the target. It may also lower the target’s Sp. Def stat.";
+    19	    }
+    20	}
+
+---------------------------------------------------------
+Moves/Facade.java:
+
+     1	package Moves;
+     2	
+     3	import ru.ifmo.se.pokemon.*;
+     4	import java.util.Set;
+     5	
+     6	public class Facade extends PhysicalMove {
+     7	
+     8	    static final Set<Status> doubleDamageConditions = Set.of(Status.BURN, Status.PARALYZE, Status.POISON);
+     9	
+    10	    public Facade(double pow, double acc, Pokemon attackingPokemon) {
+    11	        super(Type.NORMAL, pow, acc);
+    12	
+    13	        if (doubleDamageConditions.contains(attackingPokemon.getCondition())) {
+    14	            super.power = pow * 2;
+    15	        }
+    16	    }
+    17	
+    18	    @Override
+    19	    public String describe() {
+    20	        return "An attack move that doubles its power if the user is poisoned, burned, or has paralysis.";
+    21	    }
+    22	}
+
+---------------------------------------------------------
+Moves/Nidoqueen/Thunder.java:
+
+     1	package Moves.Nidoqueen;
+     2	
+     3	import ru.ifmo.se.pokemon.*;
+     4	
+     5	public class Thunder extends SpecialMove {
+     6	
+     7	    public Thunder(double pow, double acc) {
+     8	        super(Type.ELECTRIC, pow, acc);
+     9	    }
+    10	
+    11	    @Override
+    12	    protected void applyOppEffects(Pokemon pokemon) {
+    13	        if (new Effect().chance(0.3).success()) {
+    14	            Effect.paralyze(pokemon);
+    15	        }
+    16	    }
+    17	
+    18	    @Override
+    19	    protected String describe() {
+    20	        return "A wicked thunderbolt is dropped on the target to inflict damage. It may also leave the target with paralysis.";
+    21	    }
+    22	}
+
+---------------------------------------------------------
+Moves/NidoranF/DoubleKick.java:
+
+     1	package Moves.NidoranF;
+     2	
+     3	import ru.ifmo.se.pokemon.*;
+     4	
+     5	public class DoubleKick extends PhysicalMove {
+     6	    public DoubleKick(double pow, double acc) {
+     7	        super(Type.FIGHTING, pow, acc, 0, 2);
+     8	    }
+     9	
+    10	    @Override
+    11	    public String describe() {
+    12	        return "The target is quickly kicked twice in succession using both feet.";
+    13	    }
+    14	}
+
+---------------------------------------------------------
+Moves/Nidorina/Bite.java:
+
+     1	package Moves.Nidorina;
+     2	
+     3	import ru.ifmo.se.pokemon.*;
+     4	
+     5	public class Bite extends PhysicalMove {
+     6	
+     7	    public Bite(double pow, double acc) {
+     8	        super(Type.DARK, pow, acc);
+     9	    }
+    10	
+    11	    @Override
+    12	    protected void applyOppEffects(Pokemon pokemon) {
+    13	        if (new Effect().chance(0.3).success()) {
+    14	            Effect.flinch(pokemon);
+    15	        }
+    16	    }
+    17	
+    18	    @Override
+    19	    protected String describe() {
+    20	        return "The target is bitten with viciously sharp fangs. It may make the target flinch.";
+    21	    }
+    22	}
+
+---------------------------------------------------------
+Moves/Togedemaru/Bulldoze.java:
+
+     1	package Moves.Togedemaru;
+     2	import ru.ifmo.se.pokemon.*;
+     3	
+     4	public class Bulldoze extends PhysicalMove {
+     5	    public Bulldoze(double pow, double acc) {
+     6	        super(Type.GROUND, pow, acc);
+     7	    }
+     8	
+     9	    @Override
+    10	    protected void applyOppEffects(Pokemon pokemon) {
+    11	        pokemon.setMod(Stat.SPEED, -1);
+    12	    }
+    13	
+    14	    @Override
+    15	    protected String describe() {
+    16	        return "Togedemaru stomps down on the ground and attacks everything in the area. Hit Pokémon’s Speed stat is reduced.";
+    17	    }
+    18	}
+
+---------------------------------------------------------
+Moves/Togedemaru/Rest.java:
+
+     1	package Moves.Togedemaru;
+     2	import ru.ifmo.se.pokemon.*;
+     3	
+     4	public class Rest extends StatusMove {
+     5	
+     6	    public Rest(double pow, double acc) {
+     7	        super(Type.PSYCHIC, pow, acc);
+     8	    }
+     9	
+    10	    @Override
+    11	    protected void applySelfEffects(Pokemon pokemon) {
+    12	        pokemon.setMod(Stat.HP, (int)Math.round(pokemon.getHP() - pokemon.getStat(Stat.HP)));
+    13	
+    14	        pokemon.addEffect(new Effect().turns(2).condition(Status.SLEEP));
+    15	    }
+    16	
+    17	    @Override
+    18	    protected String describe() {
+    19	        return "Togedemaru goes to sleep for two turns. It fully restores the user’s HP and heals any status problem.";
+    20	    }
+    21	}
+
+---------------------------------------------------------
+Moves/Togedemaru/WillOWisp.java:
+
+     1	package Moves.Togedemaru;
+     2	import ru.ifmo.se.pokemon.*;
+     3	
+     4	public class WillOWisp extends StatusMove {
+     5	
+     6	    public WillOWisp(double dmg, double acc) {
+     7	        super(Type.FIRE, dmg, acc);
+     8	    }
+     9	    @Override
+    10	    public void applyOppEffects(Pokemon pokemon) {
+    11	        Effect.burn(pokemon);
+    12	    }
+    13	
+    14	    @Override
+    15	    protected String describe() {
+    16	        return "Togedemaru shoots a sinister, bluish-white flame at the target to inflict a burn.";
+    17	    }
+    18	}
+
+---------------------------------------------------------
+Moves/Togedemaru/WorkUp.java:
+
+     1	package Moves.Togedemaru;
+     2	
+     3	import ru.ifmo.se.pokemon.*;
+     4	
+     5	public class WorkUp extends StatusMove {
+     6	
+     7	    public WorkUp(double pow, double acc) {
+     8	        super(Type.NORMAL, pow, acc);
+     9	    }
+    10	
+    11	    @Override
+    12	    protected void applySelfEffects(Pokemon pokemon) {
+    13	        pokemon.setMod(Stat.ATTACK, 1);
+    14	        pokemon.setMod(Stat.SPECIAL_ATTACK, 1);
+    15	    }
+    16	
+    17	    @Override
+    18	    protected String describe() {
+    19	        return "Togedemaru is roused, and its Attack and Sp. Atk stats increase.";
+    20	    }
+    21	}
+
+---------------------------------------------------------
+Moves/Umbreon/DreamEater.java:
+
+     1	package Moves.Umbreon;
+     2	
+     3	import ru.ifmo.se.pokemon.*;
+     4	
+     5	public class DreamEater extends SpecialMove {
+     6	
+     7	    public DreamEater(double pow, double acc) {
+     8	        super(Type.PSYCHIC, pow, acc);
+     9	    }
+    10	
+    11	    @Override
+    12	    protected void applyOppDamage(Pokemon pokemon, double damage) {
+    13	        if (pokemon.getCondition() != Status.SLEEP) return;
+    14	
+    15	        pokemon.setMod(Stat.HP, (int) Math.round(damage));
+    16	    }
+    17	
+    18	    @Override
+    19	    protected void applySelfDamage(Pokemon pokemon, double damage) {
+    20	        pokemon.setMod(Stat.HP, -(int) Math.round(damage / 2));
+    21	    }
+    22	
+    23	    @Override
+    24	    public String describe() {
+    25	        return "Umbreon eats the dreams of a sleeping target. It absorbs half the damage caused to heal the user’s HP.";
+    26	    }
+    27	}
+
+---------------------------------------------------------
+Pokemons/Eevee.java:
+
+     1	package Pokemons;
+     2	import Moves.Eevee.*;
+     3	import Moves.Facade;
+     4	import ru.ifmo.se.pokemon.*;
+     5	
+     6	public class Eevee extends Pokemon {
+     7	    public Eevee(String name, int level) {
+     8	        super(name, level);
+     9	
+    10	        super.setType(Type.NORMAL);
+    11	        super.setStats(55, 55, 50, 45, 65, 55);
+    12	
+    13	        Facade facade = new Facade(70, 100, this);
+    14	        ShadowBall shadowBall = new ShadowBall(80, 100);
+    15	        BabyDollEyes babyDollEyes = new BabyDollEyes(0, 100);
+    16	
+    17	        super.setMove(facade, shadowBall, babyDollEyes);
+    18	    }
+    19	}
+---------------------------------------------------------
+Pokemons/Nidoqueen.java:
+
+     1	package Pokemons;
+     2	
+     3	import Moves.Nidoqueen.Thunder;
+     4	import ru.ifmo.se.pokemon.Type;
+     5	
+     6	public class Nidoqueen extends Nidorina {
+     7	    public Nidoqueen(String name, int level) {
+     8	        super(name, level);
+     9	
+    10	        super.setType(Type.POISON, Type.GROUND);
+    11	        super.setStats(90, 92, 87, 75, 85, 76);
+    12	
+    13	        Thunder thunder = new Thunder(110, 70);
+    14	
+    15	        super.addMove(thunder);
+    16	    }
+    17	}
+
+---------------------------------------------------------
+Pokemons/NidoranF.java:
+
+     1	package Pokemons;
+     2	
+     3	import Moves.Facade;
+     4	import Moves.NidoranF.DoubleKick;
+     5	import ru.ifmo.se.pokemon.*;
+     6	
+     7	public class NidoranF extends Pokemon {
+     8	
+     9	    public NidoranF(String name, int level) {
+    10	        super(name, level);
+    11	
+    12	        super.setType(Type.POISON);
+    13	        super.setStats(55, 47, 52, 40, 40, 41);
+    14	
+    15	        Facade facade = new Facade(70, 100, this);
+    16	        DoubleKick doubleKick = new DoubleKick(30, 100);
+    17	
+    18	        super.setMove(facade, doubleKick);
+    19	    }
+    20	}
+
+---------------------------------------------------------
+Pokemons/Nidorina.java:
+
+     1	package Pokemons;
+     2	
+     3	import Moves.Nidorina.Bite;
+     4	import ru.ifmo.se.pokemon.*;
+     5	
+     6	public class Nidorina extends NidoranF {
+     7	    public Nidorina(String name, int level) {
+     8	        super(name, level);
+     9	
+    10	        super.setType(Type.POISON);
+    11	        super.setStats(70, 62, 67, 55, 55, 56);
+    12	
+    13	        Bite bite = new Bite(60, 100);
+    14	
+    15	        super.addMove(bite);
+    16	    }
+    17	}
+
+---------------------------------------------------------
+Pokemons/Togedemaru.java:
+
+     1	package Pokemons;
+     2	import Moves.Togedemaru.*;
+     3	import ru.ifmo.se.pokemon.*;
+     4	
+     5	public class Togedemaru extends Pokemon {
+     6	    public Togedemaru(String name, int level) {
+     7	        super(name, level);
+     8	
+     9	        super.setType(Type.ELECTRIC, Type.STEEL);
+    10	        super.setStats(65, 98, 63, 40, 73, 96);
+    11	
+    12	        Bulldoze bulldoze = new Bulldoze(60, 100);
+    13	        Rest rest = new Rest(0, 0);
+    14	        WillOWisp willOWisp = new WillOWisp(0, 85);
+    15	        WorkUp workUp = new WorkUp(0, 0);
+    16	
+    17	        super.setMove(bulldoze, rest, willOWisp, workUp);
+    18	    }
+    19	}
+
+---------------------------------------------------------
+Pokemons/Umbreon.java:
+
+     1	package Pokemons;
+     2	
+     3	import Moves.Umbreon.DreamEater;
+     4	import ru.ifmo.se.pokemon.Type;
+     5	
+     6	public class Umbreon extends Eevee {
+     7	
+     8	    public Umbreon(String name, int level) {
+     9	        super(name, level);
+    10	
+    11	        super.setType(Type.DARK);
+    12	        super.setStats(95, 65, 110, 60, 130, 65);
+    13	
+    14	        DreamEater dreamEater = new DreamEater(100, 100);
+    15	
+    16	        super.addMove(dreamEater);
+    17	    }
+    18	}
+
+---------------------------------------------------------

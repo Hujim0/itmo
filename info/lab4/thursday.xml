@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+    <array name="days">
+        <item>
+            <test>
+                <hello prikol="prokol" test="test">hi!!</hello>
+            </test>
+            <day_of_the_week>3</day_of_the_week>
+            <array name="classes">
+                <item>
+                    <start_time>8:20</start_time>
+                    <end_time>9:50</end_time>
+                    <class_name>Основы профессиональной деятельности</class_name>
+                    <type>Лабораторная</type>
+                    <teacher>Карасёва Мария Александрова</teacher>
+                    <class_room>1324</class_room>
+                    <address>Кронверский пр., д.49,лит.А</address>
+                </item>
+                <item>
+                    <start_time>10:00</start_time>
+                    <end_time>11:30</end_time>
+                    <type>Лабораторная</type>
+                    <class_name>Основы профессиональной деятельности</class_name>
+                    <teacher>Карасёва Мария Александрова</teacher>
+                    <class_room>1324</class_room>
+                    <address>Кронверский пр., д.49,лит.А</address>
+                </item>
+                <item>
+                    <start_time>11:40</start_time>
+                    <end_time>13:10</end_time>
+                    <type>Практика</type>
+                    <class_name>История российской науки и техники</class_name>
+                    <teacher>Белоусов Александр Сергеевич</teacher>
+                    <class_room>2430</class_room>
+                    <address>Кронверский пр., д.49,лит.А</address>
+                </item>
+                <item>
+                    <start_time>13:30</start_time>
+                    <end_time>15:00</end_time>
+                    <type>Лекция</type>
+                    <class_name>История российской науки и техники</class_name>
+                    <teacher>Белоусов Александр Сергеевич</teacher>
+                    <class_room>1404</class_room>
+                    <address>Кронверский пр., д.49,лит.А</address>
+                </item>
+            </array>
+        </item>
+    </array>
+</root>

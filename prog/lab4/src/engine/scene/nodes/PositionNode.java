@@ -29,7 +29,7 @@ public class PositionNode extends Node implements Comparable<DrawableNode> {
             IntVector2 parentGlobalPosition = ((PositionNode)parentNode).getGlobalPosition();
 
             localPosition = new IntVector2(this.localPosition.X - parentGlobalPosition.X,this.localPosition.Y - parentGlobalPosition.Y);
-            globalPosition = this.globalPosition.plus(parentGlobalPosition);
+//            globalPosition = this.globalPosition.plus(parentGlobalPosition);
         }
     }
 

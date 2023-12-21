@@ -1,46 +1,35 @@
 package engine.render;
 
+import engine.Debug;
 import lombok.Data;
-import engine.structs.IntVector2;
 import engine.scene.SceneTree;
-import engine.scene.nodes.DrawableNode;
+
+import java.util.logging.Level;
 
 @Data
-public class Renderer {
-    private Screen currentScreen;
+public abstract class Renderer {
     private SceneTree currentSceneTree;
 
     private final int amountOfFrames;
+    private int currentFrame = 0;
 
-    public Renderer(IntVector2 resolution, SceneTree sceneTree, int amountOfFrames) {
-        currentScreen = new Screen(resolution);
-        this.amountOfFrames = amountOfFrames;
-        this.currentSceneTree = sceneTree;
-    }
+    public abstract void showSceneObjects();
+
     public void render() {
-        while (currentScreen.getFrame() < amountOfFrames) {
-            currentScreen.clear();
+        while (currentFrame < amountOfFrames) {
+            Debug.log(Level.FINEST, currentSceneTree.printTree());
 
-            currentSceneTree.update(currentScreen.getFrame());
+
+            currentSceneTree.update(currentFrame);
 
             currentSceneTree.sortDrawables();
 
-            for (DrawableNode drawableNode : currentSceneTree.getDrawableNodesRenderQueue()) {
-                drawableNode.renderToScreen(currentScreen);
-            }
-
-            for(int i = 0; i < currentScreen.getResolution().Y; i++) {
-                String out = new String(currentScreen.getCanvas()[i]);
-                if (out.isBlank()) {
-                    continue;
-                }
-                System.out.println(out);
-            }
+            showSceneObjects();
 
             currentSceneTree.releaseRenderQueue();
             currentSceneTree.releaseActionQueue();
 
-            currentScreen.updateFrameCounter();
+            currentFrame++;
         }
     }
 }

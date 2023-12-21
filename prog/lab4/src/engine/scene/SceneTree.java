@@ -1,8 +1,9 @@
 package engine.scene;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import main.scene.Environment;
+import application.main.scene.Environment;
 import engine.structs.ActionData;
 import engine.interfaces.Findable;
 import engine.scene.nodes.DrawableNode;
@@ -12,11 +13,10 @@ import java.util.*;
 
 @Getter
 public class SceneTree {
-    private List<Node> nodes = new ArrayList<>();
+    private final List<Node> nodes = new ArrayList<>();
 
     @Setter
-    private Node root;
-
+    private final Node root;
 
 
     private final Queue<ActionData> actionQueue = new ArrayDeque<>();
@@ -47,10 +47,14 @@ public class SceneTree {
         drawableNodesRenderQueue.clear();
     }
 
-    public void printTree() {
-        System.out.println("root");
+    public String printTree() {
+        System.out.println(" ┖╴root");
 
-        printChildren(0, root);
+        StringBuilder builder = new StringBuilder();
+
+        printChildren("   ", root, builder);
+
+        return builder.toString();
     }
 
     public Node find(Findable labmda) {
@@ -59,7 +63,9 @@ public class SceneTree {
 
     private Node findInNodesChildrenRecursively(Findable lambda, Node parent) {
         for (Node child : parent.getChildNodes()) {
-            findInNodesChildrenRecursively(lambda, child);
+            if (findInNodesChildrenRecursively(lambda, child) == null) {
+                continue;
+            };
 
             if (lambda.compare(child))
                 return child;
@@ -68,19 +74,33 @@ public class SceneTree {
         return null;
     }
 
-    void printChildren(int depth, Node node) {
-        depth+=1;
-        for (Node child : node.getChildNodes()) {
+    void printChildren(String trail, Node node, StringBuilder builder) {
+        List<Node> children = node.getChildNodes();
+
+        int childCount = children.size();
+
+        for (int i = 0; i < childCount; i++) {
+
+
+            Node child = children.get(i);
+            String out;
+
+            if (i == childCount - 1) {
+                out = trail +" ┖╴"+ child;
+            }
+            else {
+                out = trail +" ┠╴"+ child;
+            }
+
+            builder.append(out);
+            builder.append("\n");
             if (!child.getChildNodes().isEmpty()) {
-                String out = new String();
-
-                for (int i = 0; i < depth; i++) {
-                    out += "  ";
+                if (i == childCount - 1) {
+                    printChildren(trail + "   ", child, builder);
                 }
-
-                out += child.toString() + "\n";
-                System.out.println(out);
-                printChildren(depth, child);
+                else {
+                    printChildren(trail + " ┃ ", child, builder);
+                }
             }
         }
     }

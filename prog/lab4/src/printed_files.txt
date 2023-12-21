@@ -1,0 +1,1381 @@
+application/characters/MuminTroll.java:
+
+     1	package application.characters;
+     2	
+     3	import application.extensions.Sensible;
+     4	import application.main.scene.Sandwich;
+     5	import application.main.scene.enums.EnvironmentTemperature;
+     6	import engine.scene.nodes.Node;
+     7	import application.main.scene.Environment;
+     8	
+     9	import java.util.List;
+    10	
+    11	public class MuminTroll extends Node implements Sensible {
+    12	
+    13	    @Override
+    14	    public String toString() {
+    15	        return "MuminTroll";
+    16	    }
+    17	
+    18	    @Override
+    19	    public void reactToEnvironment(Environment environment) {
+    20	        if (environment.getTemperature() == EnvironmentTemperature.COLD_TEMREATURE) {
+    21	            System.out.println("Было " + environment.getTemperature().description);
+    22	        }
+    23	    }
+    24	    @Override
+    25	    public void treeEnter() {
+    26	        addAction(2, (obj) -> {
+    27	            MuminTroll instance = (MuminTroll) obj;
+    28	
+    29	            Environment currentEnvironment = obj.getSceneTree().getEnvironment();
+    30	
+    31	            instance.reactToEnvironment(currentEnvironment);
+    32	
+    33	        });
+    34	        addAction(3, (obj) -> {
+    35	            for (Node sibling : obj.getParentNode().getChildNodes())  {
+    36	                if (sibling.getName() == "Корзинка с едой") {
+    37	                    sibling.queueMoveToChild(obj);
+    38	                    break;
+    39	                }
+    40	            }
+    41	
+    42	            System.out.println("Наконец Муми-тролль встал и машинально снял с ветки корзинку с едой.");
+    43	        });
+    44	
+    45	        addAction(4, (obj) -> {
+    46	
+    47	            List<Node> sandwiches = obj.getChildNodes().get(0).getChildNodes();
+    48	
+    49	            System.out.print("Вдруг он увидел надписи на свертках: их сделала ");
+    50	
+    51	            System.out.println(((Sandwich)sandwiches.get(0)).getMadeBy());
+    52	
+    53	            System.out.print("На каждом из них стояло ");
+    54	
+    55	            for (int i = 0; i < sandwiches.size() - 1; i++) {
+    56	                if (i != 0) {
+    57	                    System.out.print(", ");
+    58	                }
+    59	                System.out.print("либо " + sandwiches.get(i).getName());
+    60	            }
+    61	
+    62	            Sandwich sandwichFromPapa = (Sandwich) sandwiches.get(sandwiches.size() - 1);
+    63	
+    64	            System.out.print("\n");
+    65	            System.out.println("На последнем мама написала: \"Это от " + sandwichFromPapa.getMadeBy() + "\"");
+    66	
+    67	            System.out.println("В свертке оказалась " + sandwichFromPapa.getName());
+    68	        });
+    69	    }
+    70	}
+---------------------------------------------------------
+application/characters/Snork.java:
+
+     1	package application.characters;
+     2	
+     3	import application.extensions.Sensible;
+     4	import lombok.AllArgsConstructor;
+     5	import lombok.Getter;
+     6	import lombok.NoArgsConstructor;
+     7	import application.main.scene.enums.EnvironmentTemperature;
+     8	import application.main.scene.enums.SnorkState;
+     9	import engine.scene.nodes.Node;
+    10	import application.main.scene.Environment;
+    11	
+    12	@Getter
+    13	@AllArgsConstructor
+    14	@NoArgsConstructor
+    15	public class Snork extends Node implements Sensible {
+    16	
+    17	    SnorkState state = SnorkState.DEFAULT;
+    18	    public void changeState(SnorkState state, String message) {
+    19	        this.state = state;
+    20	
+    21	        System.out.println("Снорк " + message);
+    22	    }
+    23	
+    24	    @Override
+    25	    public void reactToEnvironment(Environment environment) {
+    26	        if (environment.getTemperature() == EnvironmentTemperature.COLD_TEMREATURE) {
+    27	            System.out.println("Фрекен Снорк тихо плакала, уткнувшись в перину.");
+    28	        }
+    29	    }
+    30	
+    31	    @Override
+    32	    public void treeEnter() {
+    33	        addAction(
+    34	        0, (obj) -> {
+    35	            Snork instance = (Snork) obj;
+    36	            instance.changeState(SnorkState.LOST_SPEECH, "на мгновение утратила дар речи.");
+    37	        });
+    38	        addAction(1, (obj) -> {
+    39	            Snork instance = (Snork) obj;
+    40	            instance.changeState(SnorkState.LEANED_OVER, "наклонилась. И начала трясти Муми-тролля");
+    41	
+    42	        });
+    43	        addAction(2, (obj) -> {
+    44	            Snork instance = (Snork) obj;
+    45	            instance.changeState(SnorkState.HUGGING_AND_CRYING, "и Муми-Троль долго сидели прижавшись друг к другу.");
+    46	            instance.reactToEnvironment(instance.getSceneTree().getEnvironment());
+    47	
+    48	
+    49	        });
+    50	    }
+    51	}
+---------------------------------------------------------
+application/extensions/CanBeDescribed.java:
+
+     1	package application.extensions;
+     2	
+     3	public interface CanBeDescribed {
+     4	    String describe();
+     5	}
+
+---------------------------------------------------------
+application/extensions/EnvironmentEmptyException.java:
+
+     1	package application.extensions;
+     2	
+     3	public class EnvironmentEmptyException extends Exception {
+     4	
+     5	}
+
+---------------------------------------------------------
+application/extensions/Screen.java:
+
+     1	package application.extensions;
+     2	import lombok.*;
+     3	import engine.structs.IntVector2;
+     4	
+     5	@Getter
+     6	public class Screen {
+     7	    @Setter
+     8	    private IntVector2 resolution;
+     9	
+    10	    private char[][] canvas;
+    11	
+    12	    public Screen(IntVector2 resolution) {
+    13	        this.resolution = resolution;
+    14	        canvas = new char[resolution.Y][resolution.X];
+    15	
+    16	        clear();
+    17	    }
+    18	
+    19	    public void clear() {
+    20	        canvas = new char[resolution.Y][resolution.X];
+    21	
+    22	        for (int x = 0; x < resolution.X; x++) {
+    23	            for (int y = 0; y < resolution.Y; y++) {
+    24	                canvas[y][x] = ' ';
+    25	            }
+    26	        }
+    27	    }
+    28	}
+
+---------------------------------------------------------
+application/extensions/Sensible.java:
+
+     1	package application.extensions;
+     2	
+     3	import application.main.scene.Environment;
+     4	
+     5	public interface Sensible {
+     6	    void reactToEnvironment(Environment environment);
+     7	}
+
+---------------------------------------------------------
+application/extensions/SpriteData.java:
+
+     1	package application.extensions;
+     2	import engine.structs.IntVector2;
+     3	import lombok.*;
+     4	
+     5	@Data
+     6	@AllArgsConstructor
+     7	@NoArgsConstructor
+     8	public class SpriteData {
+     9	    IntVector2 Resolution = new IntVector2(0,0);
+    10	    @ToString.Exclude
+    11	    char[][] CurrentSprite = null;
+    12	}
+
+---------------------------------------------------------
+application/extensions/SpriteNode.java:
+
+     1	package application.extensions;
+     2	
+     3	import engine.interfaces.Renderable;
+     4	import engine.scene.nodes.DrawableNode;
+     5	import lombok.*;
+     6	import engine.structs.IntVector2;
+     7	
+     8	@Data
+     9	@AllArgsConstructor
+    10	@NoArgsConstructor
+    11	public class SpriteNode extends DrawableNode implements Renderable {
+    12	
+    13	
+    14	    SpriteData sprite;
+    15	
+    16	    public void renderToScreen(Screen screen) {
+    17	        if (!isVisible()|| sprite == null) return;
+    18	
+    19	        IntVector2 resolution = sprite.getResolution();
+    20	        IntVector2 screenBoundaries = screen.getResolution();
+    21	
+    22	        IntVector2 globalPosition = getGlobalPosition();
+    23	
+    24	        char[][] screenCanvas = screen.getCanvas();
+    25	
+    26	        for (int x = 0; x < resolution.X; x++) {
+    27	            for (int y = 0; y < resolution.Y; y++) {
+    28	                char currentChar = sprite.getCurrentSprite()[y][x];
+    29	
+    30	                if (currentChar == ' ') {
+    31	                    continue;
+    32	                }
+    33	                if (globalPosition.Y + y < 0 ||
+    34	                        globalPosition.X + x < 0 ||
+    35	                        globalPosition.Y + y >= screenBoundaries.Y ||
+    36	                        globalPosition.X + x >= screenBoundaries.X) {
+    37	                    continue;
+    38	                }
+    39	
+    40	                screenCanvas[globalPosition.Y + y][globalPosition.X + x] = currentChar;
+    41	            }
+    42	        }
+    43	    }
+    44	}
+
+---------------------------------------------------------
+application/main/Application.java:
+
+     1	package application.main;
+     2	
+     3	import application.extensions.Screen;
+     4	import application.main.scene.SceneFactory;
+     5	import engine.Debug;
+     6	import engine.scene.SceneTree;
+     7	import engine.render.*;
+     8	import engine.scene.nodes.DrawableNode;
+     9	import engine.structs.*;
+    10	import engine.scene.nodes.Node;
+    11	
+    12	import java.util.logging.Level;
+    13	/*
+    14	Деревья, туман, вода. А дома нет. Дом исчез, а их с Муми-троллем бросили на произвол судьбы.
+    15	На мгновение фрекен Снорк утратила дар речи. Затем, наклонившись, начала осторожно трясти Муми-тролля.
+    16	Кругом капало. Кап-кап-кап -- печально падали капли, разбиваясь о темную воду.
+    17	За ночь опали лепестки цветов на деревьях. Было холодно. Прижавшись друг к другу,
+    18	они долго сидели не двигаясь, фрекен Снорк тихо плакала, уткнувшись в перину.
+    19	Наконец Муми-тролль встал с постели и машинально снял с ветки корзинку с едой.
+    20	*/
+    21	
+    22	public class Application {
+    23	    static SceneTree currentSceneTree = new SceneTree();
+    24	    static public void run() {
+    25	
+    26	        Debug.LOGGER.setLevel(Level.INFO);
+    27	
+    28	        System.out.println(new Node().hashCode());
+    29	
+    30	        currentSceneTree = SceneFactory.createScene1();
+    31	
+    32	        currentSceneTree.sortDrawables();
+    33	        Renderer renderer = new Renderer(5) {
+    34	            public void showSceneObjects() {
+    35	                Screen screen = new Screen(new IntVector2(15 * 5, 10 * 5));
+    36	
+    37	                for (DrawableNode drawableNode : currentSceneTree.getDrawableNodesRenderQueue()) {
+    38	                    drawableNode.renderToScreen(screen);
+    39	                }
+    40	
+    41	                for(int i = 0; i < screen.getResolution().Y; i++) {
+    42	                    String out = new String(screen.getCanvas()[i]);
+    43	                    if (out.isBlank()) {
+    44	                        continue;
+    45	                    }
+    46	                    System.out.println(out);
+    47	                }
+    48	            }
+    49	        };
+    50	
+    51	        Debug.log(Level.FINEST, currentSceneTree.printTree());
+    52	
+    53	        renderer.setCurrentSceneTree(currentSceneTree);
+    54	
+    55	        renderer.render();
+    56	    }
+    57	}
+---------------------------------------------------------
+application/main/Main.java:
+
+     1	package application.main;
+     2	public class Main {
+     3	    public static void main(String[] args) {
+     4	        Application.run();
+     5	    }
+     6	}
+     7	//добавить ломбок (Done)
+     8	
+     9	//логирование (не через систем аут)
+    10	
+    11	//енам Деревья, туман, вода (Done)
+    12	//класс героев (Вместо этого сделал интерфейс) (Done)
+    13	//интерфейс дождя (Другой интерфейс)
+    14	//состояние героев выделить (Done)
+    15	//корзинку с едой (Done)
+    16	//енам с едой (можно придумать) чтобы положить в корзинку (Done)
+    17	//реализовать фильтр
+---------------------------------------------------------
+application/main/scene/enums/EnvironmentObjectTypes.java:
+
+     1	package application.main.scene.enums;
+     2	
+     3	import lombok.Getter;
+     4	
+     5	public enum EnvironmentObjectTypes {
+     6	    TREES("Деревья"),
+     7	    FOG("Туман"),
+     8	    WATER("Вода"),
+     9	    RAIN("Дождь"),
+    10	    BUSHES("Кусты");
+    11	    @Getter
+    12	    final String description;
+    13	    EnvironmentObjectTypes(String description) {
+    14	        this.description = description;
+    15	    }
+    16	
+    17	
+    18	}
+
+---------------------------------------------------------
+application/main/scene/enums/EnvironmentTemperature.java:
+
+     1	package application.main.scene.enums;
+     2	
+     3	public enum EnvironmentTemperature {
+     4	    HOT_TEMPERATURE("Жарко"),
+     5	    WARM_TEMREATURE("Тепло"),
+     6	    COLD_TEMREATURE("Холодно");
+     7	    public final String description;
+     8	    EnvironmentTemperature(String description) {
+     9	        this.description = description;
+    10	    }
+    11	}
+
+---------------------------------------------------------
+application/main/scene/enums/FoodItems.java:
+
+     1	package application.main.scene.enums;
+     2	
+     3	public enum FoodItems {
+     4	    APPLE,
+     5	    BANANA,
+     6	    PEACH,
+     7	    MEAT,
+     8	    ORANGE,
+     9	    BLUE_BERRIES
+    10	}
+
+---------------------------------------------------------
+application/main/scene/enums/SnorkState.java:
+
+     1	package application.main.scene.enums;
+     2	
+     3	public enum SnorkState {
+     4	    LOST_SPEECH,
+     5	    LEANED_OVER,
+     6	    HUGGING_AND_CRYING,
+     7	    DEFAULT
+     8	}
+---------------------------------------------------------
+application/main/scene/Environment.java:
+
+     1	package application.main.scene;
+     2	
+     3	import application.extensions.EnvironmentEmptyException;
+     4	import application.main.scene.enums.EnvironmentObjectTypes;
+     5	import engine.scene.nodes.Node;
+     6	import lombok.Data;
+     7	import lombok.EqualsAndHashCode;
+     8	import application.main.scene.enums.EnvironmentTemperature;
+     9	
+    10	import java.util.ArrayList;
+    11	import java.util.List;
+    12	
+    13	@EqualsAndHashCode(callSuper = true)
+    14	@Data
+    15	public class Environment extends Node {
+    16	
+    17	    private List<EnvironmentObjectTypes> objects = new ArrayList<>();
+    18	
+    19	    private EnvironmentTemperature temperature;
+    20	
+    21	    public Environment addObjects(EnvironmentTemperature temperature, EnvironmentObjectTypes...obj) {
+    22	        objects.addAll(List.of(obj));
+    23	        this.temperature = temperature;
+    24	        return this;
+    25	    }
+    26	
+    27	    public Environment addObject(EnvironmentObjectTypes obj) {
+    28	        objects.add(obj);
+    29	
+    30	        return this;
+    31	    }
+    32	
+    33	    public String describeView() throws EnvironmentEmptyException {
+    34	        if (objects.size() == 0) {
+    35	            throw new EnvironmentEmptyException();
+    36	        }
+    37	
+    38	        String out = "Вокруг видно: ";
+    39	
+    40	        for (int i =0; i < objects.size(); i++) {
+    41	            out += objects.get(i).getDescription();
+    42	            if (i != objects.size() - 1) {
+    43	                out += ", ";
+    44	            }
+    45	        }
+    46	
+    47	        return out;
+    48	    }
+    49	}
+
+---------------------------------------------------------
+application/main/scene/FoodBasket.java:
+
+     1	package application.main.scene;
+     2	
+     3	import application.extensions.CanBeDescribed;
+     4	import engine.scene.nodes.Node;
+     5	import lombok.Data;
+     6	import lombok.EqualsAndHashCode;
+     7	
+     8	@EqualsAndHashCode(callSuper = true)
+     9	@Data
+    10	public class FoodBasket extends Node implements CanBeDescribed {
+    11	    @Override
+    12	    public String describe() {
+    13	        return "Она была набита маленькими аккуратными бутербродиками, завернутыми в шелковистую бумагу";
+    14	    }
+    15	
+    16	    @Override
+    17	    public void treeEnter() {
+    18	        setName("Корзинка с едой");
+    19	        addChild(new Sandwich("\"Сыр\"", "Мама"));
+    20	        addChild(new Sandwich("\"Только с маслом\"", "мама"));
+    21	        addChild(new Sandwich("\"Дорогая колбаса\"", "мама"));
+    22	        addChild(new Sandwich("\"С добрым утром!\"", "мама"));
+    23	        addChild(new Sandwich("банка крабов, которую папа берег с весны.", "папы"));
+    24	
+    25	        addAction(3, (obj) -> {
+    26	            System.out.println(((CanBeDescribed) obj).describe());
+    27	        });
+    28	    }
+    29	}
+
+---------------------------------------------------------
+application/main/scene/Forest.java:
+
+     1	package application.main.scene;
+     2	
+     3	import lombok.Data;
+     4	import lombok.EqualsAndHashCode;
+     5	import lombok.RequiredArgsConstructor;
+     6	import engine.scene.nodes.PositionNode;
+     7	import engine.structs.IntVector2;
+     8	
+     9	@EqualsAndHashCode(callSuper = true)
+    10	@Data
+    11	@RequiredArgsConstructor
+    12	
+    13	public class Forest extends PositionNode {
+    14	
+    15	    public Forest(IntVector2 position) {
+    16	        super(position);
+    17	    }
+    18	
+    19	    @Override
+    20	    public void treeEnter() {
+    21	        final IntVector2[] TreesChunk = new IntVector2[] {
+    22	                new IntVector2(0,1),
+    23	                new IntVector2(5,2),
+    24	                new IntVector2(4,-1),
+    25	                new IntVector2(8,0),
+    26	            };
+    27	
+    28	        final IntVector2[] TreesChunk2 = new IntVector2[] {
+    29	                new IntVector2(2,3),
+    30	                new IntVector2(4,-1),
+    31	                new IntVector2(0,1),
+    32	                new IntVector2(7,0),
+    33	        };
+    34	        final IntVector2[] offsets = new IntVector2[] {
+    35	                new IntVector2(3,0),
+    36	                new IntVector2(14,0),
+    37	                new IntVector2(26,1),
+    38	                new IntVector2(37,0),
+    39	                new IntVector2(49,1),
+    40	        };
+    41	
+    42	        addChild(new Tree(new IntVector2(0, 0)));
+    43	        addChild(new Tree(new IntVector2(-2, 4)));
+    44	        addChild(new Tree(new IntVector2(52, 8)));
+    45	
+    46	        for (IntVector2 pos : offsets) {
+    47	            for (IntVector2 offset : TreesChunk) {
+    48	                addChild(new Tree(new IntVector2(pos.X + offset.X, pos.Y + offset.Y)));
+    49	            }
+    50	        }
+    51	
+    52	        addAction(1, (object) -> {
+    53	            object.forAllChildren((child) -> {
+    54	                child.setActive(false);
+    55	            });
+    56	        });
+    57	        addAction(2, (object) -> {
+    58	            object.queueFree();
+    59	            System.out.println("За ночь опали лепестки цветов на деревьях.");
+    60	
+    61	        });
+    62	        forAllChildren((tree_obj) -> {
+    63	            ((Tree)tree_obj).dropFlowerPetals();
+    64	        });
+    65	    }
+    66	}
+
+---------------------------------------------------------
+application/main/scene/Rain.java:
+
+     1	package application.main.scene;
+     2	
+     3	import application.extensions.CanBeDescribed;
+     4	import application.main.scene.enums.EnvironmentObjectTypes;
+     5	import engine.scene.nodes.Node;
+     6	import lombok.Data;
+     7	import lombok.EqualsAndHashCode;
+     8	
+     9	
+    10	@EqualsAndHashCode(callSuper = true)
+    11	@Data
+    12	public class Rain extends Node implements CanBeDescribed {
+    13	
+    14	    public final static String description = "Кругом капало. Кап-кап-кап -- печально падали капли, разбиваясь о темную воду.";
+    15	
+    16	    public String describe() {
+    17	        System.out.println(description);
+    18	
+    19	        return description;
+    20	    }
+    21	
+    22	    @Override
+    23	    public void treeEnter() {
+    24	        addAction(1, (obj) -> {
+    25	            ((CanBeDescribed) obj).describe();
+    26	            obj.getSceneTree().getEnvironment().addObject(EnvironmentObjectTypes.RAIN);
+    27	        });
+    28	    }
+    29	}
+
+---------------------------------------------------------
+application/main/scene/Sandwich.java:
+
+     1	package application.main.scene;
+     2	
+     3	import engine.scene.nodes.Node;
+     4	import lombok.*;
+     5	
+     6	@EqualsAndHashCode(callSuper = true)
+     7	@Data
+     8	public class Sandwich extends Node {
+     9	
+    10	    private String madeBy;
+    11	
+    12	    public Sandwich(String name, String madeBy) {
+    13	        this.madeBy = madeBy;
+    14	        setName(name);
+    15	    }
+    16	}
+
+---------------------------------------------------------
+application/main/scene/SceneFactory.java:
+
+     1	package application.main.scene;
+     2	
+     3	import application.characters.MuminTroll;
+     4	import application.characters.Snork;
+     5	import engine.scene.SceneTree;
+     6	import engine.structs.IntVector2;
+     7	
+     8	public class SceneFactory {
+     9	    public static SceneTree createScene1() {
+    10	        SceneTree tree = new SceneTree();
+    11	
+    12	        tree.getRoot()
+    13	                .addChild(new ViewDescriber())
+    14	                .addChild(new Forest(new IntVector2(0, 0)))
+    15	                .addChild(new SnorkAndMuminTrollSprites(new IntVector2(40, 10)))
+    16	                .addChild(new Snork())
+    17	                .addChild(new MuminTroll())
+    18	                .addChild(new Rain())
+    19	                .addChild(new FoodBasket());
+    20	
+    21	        return tree;
+    22	    }
+    23	}
+
+---------------------------------------------------------
+application/main/scene/SnorkAndMuminTrollSprites.java:
+
+     1	package application.main.scene;
+     2	
+     3	import application.extensions.*;
+     4	import engine.structs.IntVector2;
+     5	import lombok.Data;
+     6	import lombok.EqualsAndHashCode;
+     7	
+     8	@EqualsAndHashCode(callSuper = true)
+     9	@Data
+    10	public class SnorkAndMuminTrollSprites extends SpriteNode {
+    11	
+    12	    public SnorkAndMuminTrollSprites(IntVector2 pos) {
+    13	        super(SPRITE_1);
+    14	        setLocalPosition(pos);
+    15	    }
+    16	
+    17	    @Override
+    18	    public void treeEnter() {
+    19	        addAction(1, (obj) -> {
+    20	            SnorkAndMuminTrollSprites instance = (SnorkAndMuminTrollSprites) obj;
+    21	
+    22	            instance.setSprite(SnorkAndMuminTrollSprites.SPRITE_2);
+    23	            instance.setLocalPosition(new IntVector2(0, 0));
+    24	        });
+    25	        addAction(2, (obj) -> {
+    26	            SnorkAndMuminTrollSprites instance = (SnorkAndMuminTrollSprites) obj;
+    27	
+    28	            instance.setSprite(SnorkAndMuminTrollSprites.SPRITE_3);
+    29	        });
+    30	        addAction(3, (obj) -> {
+    31	            obj.setActive(false);
+    32	        });
+    33	    }
+    34	    public static final SpriteData SPRITE_1 = new SpriteData(
+    35	            new IntVector2(12,3),
+    36	            new char[][] {
+    37	
+    38	            "  0<       0".toCharArray(),
+    39	            "  |~      _\\".toCharArray(),
+    40	            " / \\      -~".toCharArray()
+    41	    });
+    42	
+    43	    public static final SpriteData SPRITE_2 = new SpriteData(
+    44	            new IntVector2(76,42),
+    45	            new char[][] {
+    46	
+    47	            "           ......-.........................+--.........+++++.........+..... ".toCharArray(),
+    48	            "        ..+----+#-...++++++++++-.............++#+.......#++++++#......++..+.".toCharArray(),
+    49	            "     .----....-----+++.......+++++++++++++-..++#++.......+++++++++...-+++++.".toCharArray(),
+    50	            "   .--.------.--###--#+..............+++#+#+++++##+-......+++++++++..+++..- ".toCharArray(),
+    51	            "  . .---+--------------##+......-........-++######+++.++...#+++++++..++#+.--".toCharArray(),
+    52	            "   .--------------+##.#----##.................-++##+++++++...++++++..++#++..".toCharArray(),
+    53	            "  .. ...-...-+.+-+-+-...##++##-..................++++++++++++++++++#.++##+..".toCharArray(),
+    54	            "       ..  .............  -+..--. +.....-...........+#+++++##+++++++.++#++..".toCharArray(),
+    55	            "  .        ............-        .-......----....-.....++++++++#+++++.++#++- ".toCharArray(),
+    56	            "         ............ +         +.....-----+---..----+++++++++++++++.+###+-.".toCharArray(),
+    57	            "         ........... /          ......-..---------........+++#+++++..+###+..".toCharArray(),
+    58	            "            .... ...-    _   _ +-.....-...---..--------.....++###+++++++++-.".toCharArray(),
+    59	            "          .      ... #  / . /.  ..............-.......----...++###++++++#+..".toCharArray(),
+    60	            "         .  .... ..|         _  #.......................-.....++##+++####+..".toCharArray(),
+    61	            "       ..    ......              ...........-............--....+#########+..".toCharArray(),
+    62	            "           ....../               +.-..............+ -...........+####+###+..".toCharArray(),
+    63	            "             ....    \\              +.............+#\\-...-.-..-..+###+###+. ".toCharArray(),
+    64	            "     ... .......+                    -......../ +--.  \\....-......+###+#++..".toCharArray(),
+    65	            "          .  ../      .. ~ ~        ...............- . \\...........++####+-.".toCharArray(),
+    66	            "         ......         -#- __.-_.+-........./.+.-.+    \\..........+++##++-.".toCharArray(),
+    67	            "        . .  ..     /    ###    ~............|-....+      ..........#++##+- ".toCharArray(),
+    68	            "          ..       /    # .      ~......---.-|-~~~~~.#     |.........####++-".toCharArray(),
+    69	            "             |          |  |      \\...........            - \\.......+###+++-".toCharArray(),
+    70	            "           . .              |     |..........| -T. ~T.   .  #......+##++++-.".toCharArray(),
+    71	            "           . .                    ~..........           .#   #..-..+##+##+- ".toCharArray(),
+    72	            "             |                    |.......~?             #   ++....+#+###+-.".toCharArray(),
+    73	            "                                 /....../       /~~++   /  .  ....-+#####+-.".toCharArray(),
+    74	            "            .                    ~......|     ~~#     +#       -..++#####+- ".toCharArray(),
+    75	            "    ....---....                 ~.......-        |      #      .+.++###+++-.".toCharArray(),
+    76	            " ....---------\\                 ~........+-       \\      +-   .  ++######+-.".toCharArray(),
+    77	            " ..............|         #.    |.+--###+-..+~~~~~+ #       ##    -#######+-.".toCharArray(),
+    78	            "        .......        ..#     ~........----+       \\        .    #######+-.".toCharArray(),
+    79	            " .            .-     -..|     /-#------+###..        .            -######+..".toCharArray(),
+    80	            "  ..    ........      /..\\___/--..-------...-          .          .######+..".toCharArray(),
+    81	            "        .........~~~~~-------------.-------.-                   .  ++####+-.".toCharArray(),
+    82	            " .........-----------.----------------#.....-                      #-++#+++.".toCharArray(),
+    83	            "..........------------+####--------.--+ +## --  ..                 --#.-..+.".toCharArray(),
+    84	            "..-.----..-----------------------.----.      .  -.   +#            + ##-#-#.".toCharArray(),
+    85	            "........-..-------.---...--------.----.      -- # ++.              + #+##-#.".toCharArray(),
+    86	            " .-----------------------------....----        +#  ++             . #---#-#.".toCharArray(),
+    87	            "...---.----------------------------------~~~~~~~+  ++   #+--+## #  #------#.".toCharArray(),
+    88	            "...--------------------------------------------.+  ++  -        ##----+---#.".toCharArray(),
+    89	            ".-------#----------------------------------------------+  .    +--------+-#-".toCharArray()
+    90	    });
+    91	
+    92	    public static final SpriteData SPRITE_3 = new SpriteData(
+    93	            new IntVector2(72,31),
+    94	            new char[][]{
+    95	                    "                             .:--   .:-..    :-.                        ".toCharArray(),
+    96	                    "                            :.=.. .=:+-=-.  :.=.                        ".toCharArray(),
+    97	                    "        -#.    =..   .-*. .-:.-:...=:-.::-  ....    -#.                 ".toCharArray(),
+    98	                    "      .*:++*.. :*#==:-=#-....:..    ..:=.....-::  .=**-                 ".toCharArray(),
+    99	                    "       =+#:=*###+#=#*:-.        .   -.::..-.:=-.: :##=.#%+*-.           ".toCharArray(),
+   100	                    "         -#%%#%%%%%##=.      ...   .-.-:=:=:=:=:=-=*.#%%##%%%: .:..     ".toCharArray(),
+   101	                    "        .#%%%%%%%%%#-       .-.~. ..-.+:-:+::=::-.::#%%.  .-%#+-=..     ".toCharArray(),
+   102	                    "        .#%#%#%%%%#..       | *@...@%.-+:~~-..@...-.+%%%####%%....      ".toCharArray(),
+   103	                    "     .. .*#%#%%%%#...        .~~~.-.=-.- %@  -.=.:..--:=-%#===*=        ".toCharArray(),
+   104	                    "     .+*+######%*.  ..              .|  ..~~       .+#=**#-:*-.         ".toCharArray(),
+   105	                    "     :-**#*+*=#+:   :.               .               ==%#++#%##*.       ".toCharArray(),
+   106	                    "     .-*#*+-..-:.   .:                 \\             -%%%%%%%%%=.       ".toCharArray(),
+   107	                    "    .*##*+=:..-.     .-                 ..             =%%%%%%%%%.      ".toCharArray(),
+   108	                    "    .*+=++++++:       .-.                .             +%%%%%%%#%*-     ".toCharArray(),
+   109	                    "     .+###*#*+          .:.            .:.           .-.+######+=**.    ".toCharArray(),
+   110	                    "     -++--#**:            .:..       .:..::.      ..:.::-.=+:=*+.       ".toCharArray(),
+   111	                    "      .-++-++.               ..:---:..      .......    :--#*-:--...     ".toCharArray(),
+   112	                    "      .+##*#=                       ...-=.              .++......+#*:   ".toCharArray(),
+   113	                    "      -*..:=.                     .::..=----.            .:.:::..-.     ".toCharArray(),
+   114	                    "     .-:.:::                .:::...     -==-.             --.:.:::      ".toCharArray(),
+   115	                    "      :::::=.                         ...-=.:             .##+=:...     ".toCharArray(),
+   116	                    "      ..--##.                     ..-...     =.            :+*#+.-:     ".toCharArray(),
+   117	                    "     .+#+#**=               ..--..===....+.   :.       .:-.:.:..:.:.    ".toCharArray(),
+   118	                    "     :.:..-::.              .-..     .:   .    .-=-.   ...-..:==: --.   ".toCharArray(),
+   119	                    "    .:.:.:.:-.            ..          -   :.:...-=-:...=  .  .=-. :==.. ".toCharArray(),
+   120	                    "     .--..:.=-                 .     .-   .   .=--..  .:  .  .==..----: ".toCharArray(),
+   121	                    "       :-...::-.              ..     .    ...            .--==++++-=*-: ".toCharArray(),
+   122	                    "          :*#***-.. .=...    ..       ..-.. ..=-::=*-.:.--+++--=++=-::. ".toCharArray(),
+   123	                    "         .:.::..-***+-. ....:-=-::::----=-=:.  .===--:--*-+==+-=--:...  ".toCharArray(),
+   124	                    "             .=***#*:.+*#+--=--=-:::-:-:+--.  .:::==:..........         ".toCharArray(),
+   125	                    "               ... ..--.....:::::-=:--:--=------:..                     ".toCharArray()
+   126	            });
+   127	}
+
+---------------------------------------------------------
+application/main/scene/Tree.java:
+
+     1	package application.main.scene;
+     2	
+     3	import engine.Debug;
+     4	import lombok.AllArgsConstructor;
+     5	import engine.structs.IntVector2;
+     6	import application.extensions.*;
+     7	import lombok.Data;
+     8	import lombok.EqualsAndHashCode;
+     9	
+    10	import java.util.logging.Level;
+    11	
+    12	@EqualsAndHashCode(callSuper = true)
+    13	@AllArgsConstructor
+    14	@Data
+    15	public class Tree extends SpriteNode {
+    16	
+    17	    public Tree(IntVector2 position) {
+    18	        super(new SpriteData(
+    19	                new IntVector2(8,5), new char[][] {
+    20	                "   /\\   ".toCharArray(),
+    21	                "  /~~\\  ".toCharArray(),
+    22	                "  /~~\\  ".toCharArray(),
+    23	                " /____\\ ".toCharArray(),
+    24	                "   ||    ".toCharArray(),
+    25	        }));
+    26	
+    27	        setLocalPosition(position);
+    28	
+    29	    }
+    30	
+    31	    public void dropFlowerPetals() {
+    32	        Debug.log(Level.FINEST, "Падают лепестки с дерева...");
+    33	    }
+    34	}
+
+---------------------------------------------------------
+application/main/scene/ViewDescriber.java:
+
+     1	package application.main.scene;
+     2	
+     3	import application.extensions.EnvironmentEmptyException;
+     4	import application.main.scene.enums.EnvironmentObjectTypes;
+     5	import application.main.scene.enums.EnvironmentTemperature;
+     6	import engine.scene.nodes.Node;
+     7	import lombok.Data;
+     8	import lombok.EqualsAndHashCode;
+     9	
+    10	@EqualsAndHashCode(callSuper = true)
+    11	@Data
+    12	public class ViewDescriber extends Node {
+    13	
+    14	    public void treeEnter() {
+    15	        getSceneTree().getEnvironment().addObjects(EnvironmentTemperature.COLD_TEMREATURE,
+    16	                EnvironmentObjectTypes.TREES,
+    17	                EnvironmentObjectTypes.FOG,
+    18	                EnvironmentObjectTypes.WATER);
+    19	
+    20	        addAction(0, (obj) -> {
+    21	            try {
+    22	                System.out.println(obj.getSceneTree().getEnvironment().describeView());
+    23	            }
+    24	            catch (EnvironmentEmptyException e) {
+    25	                System.out.println("Вокруг ничего не видно...");
+    26	            }
+    27	            finally {
+    28	                System.out.println("Их бросили на произвол судьбы.");
+    29	            }
+    30	        });
+    31	    }
+    32	}
+
+---------------------------------------------------------
+engine/Debug.java:
+
+     1	package engine;
+     2	
+     3	import java.util.logging.Level;
+     4	import java.util.logging.Logger;
+     5	
+     6	public class Debug {
+     7	
+     8	    public static Logger LOGGER = Logger.getAnonymousLogger();
+     9	
+    10	
+    11	    public static void log(Level level, String string) {
+    12	        if (LOGGER.getLevel().intValue() <= level.intValue()) {
+    13	            System.out.println(string);
+    14	        }
+    15	    }
+    16	}
+
+---------------------------------------------------------
+engine/interfaces/Action.java:
+
+     1	package engine.interfaces;
+     2	
+     3	public interface Action<T> {
+     4	    void invoke(T instance);
+     5	}
+
+---------------------------------------------------------
+engine/interfaces/Findable.java:
+
+     1	package engine.interfaces;
+     2	
+     3	import engine.scene.nodes.Node;
+     4	
+     5	public interface Findable {
+     6	    boolean compare(Node o1);
+     7	}
+
+---------------------------------------------------------
+engine/interfaces/Renderable.java:
+
+     1	package engine.interfaces;
+     2	
+     3	import application.extensions.Screen;
+     4	
+     5	public interface Renderable {
+     6	    void renderToScreen(Screen screen);
+     7	}
+
+---------------------------------------------------------
+engine/render/Renderer.java:
+
+     1	package engine.render;
+     2	
+     3	import engine.Debug;
+     4	import lombok.Data;
+     5	import engine.scene.SceneTree;
+     6	
+     7	import java.util.logging.Level;
+     8	
+     9	@Data
+    10	public abstract class Renderer {
+    11	    private SceneTree currentSceneTree;
+    12	
+    13	    private final int amountOfFrames;
+    14	    private int currentFrame = 0;
+    15	
+    16	    public abstract void showSceneObjects();
+    17	
+    18	    public void render() {
+    19	        while (currentFrame < amountOfFrames) {
+    20	            Debug.log(Level.FINEST, currentSceneTree.printTree());
+    21	
+    22	
+    23	            currentSceneTree.update(currentFrame);
+    24	
+    25	            currentSceneTree.sortDrawables();
+    26	
+    27	            showSceneObjects();
+    28	
+    29	            currentSceneTree.releaseRenderQueue();
+    30	            currentSceneTree.releaseActionQueue();
+    31	
+    32	            currentFrame++;
+    33	        }
+    34	    }
+    35	}
+
+---------------------------------------------------------
+engine/scene/nodes/DrawableNode.java:
+
+     1	package engine.scene.nodes;
+     2	
+     3	import engine.interfaces.Renderable;
+     4	import lombok.*;
+     5	import application.extensions.Screen;
+     6	
+     7	@Data
+     8	public abstract class DrawableNode extends PositionNode implements Renderable {
+     9	    private boolean isVisible = true;
+    10	    public abstract void renderToScreen(Screen screen);
+    11	
+    12	    @Override
+    13	    public void update(int currentFrame) {
+    14	        super.update(currentFrame);
+    15	
+    16	        if (isActive() && isVisible) {
+    17	            this.getSceneTree().getDrawableNodesRenderQueue().add(this);
+    18	        }
+    19	    }
+    20	}
+
+---------------------------------------------------------
+engine/scene/nodes/Node.java:
+
+     1	package engine.scene.nodes;
+     2	
+     3	import engine.Debug;
+     4	import lombok.*;
+     5	import engine.structs.ActionData;
+     6	import engine.interfaces.*;
+     7	import engine.structs.ActionOnFrame;
+     8	import engine.scene.SceneTree;
+     9	import lombok.experimental.SuperBuilder;
+    10	
+    11	import java.util.ArrayList;
+    12	import java.util.List;
+    13	import java.util.logging.Level;
+    14	
+    15	@Data
+    16	@ToString
+    17	@NoArgsConstructor
+    18	@SuperBuilder
+    19	public class Node {
+    20	
+    21	    private List<ActionOnFrame<Node>> actionsOnFrames = new ArrayList<>();
+    22	
+    23	    @ToString.Exclude
+    24	    private List<Node> childNodes = new ArrayList<>();
+    25	    @ToString.Exclude
+    26	    private Node parentNode;
+    27	
+    28	    @ToString.Exclude
+    29	    @NonNull
+    30	    private String name = toString();
+    31	
+    32	    @Setter(AccessLevel.PROTECTED)
+    33	    private SceneTree sceneTree;
+    34	
+    35	    @Setter
+    36	    private boolean active = true;
+    37	
+    38	    public Node(SceneTree tree) {
+    39	        sceneTree = tree;
+    40	    }
+    41	    public Node(String name) {
+    42	        setName(name);
+    43	    }
+    44	
+    45	    public Node(List<ActionOnFrame<Node>> actionsOnFrames, List<Node> childNodes, Node parentNode, String name, SceneTree sceneTree, boolean active) {
+    46	        this.actionsOnFrames = actionsOnFrames;
+    47	        this.childNodes = childNodes;
+    48	        this.parentNode = parentNode;
+    49	        this.name = name;
+    50	        this.sceneTree = sceneTree;
+    51	        this.active = active;
+    52	    }
+    53	
+    54	    public Node addAction(int Frame, Action<Node> callable) {
+    55	        if (getSceneTree() == null) {
+    56	            throw new NodeNotReadyException(this, "Adding actions");
+    57	        }
+    58	
+    59	
+    60	        actionsOnFrames.add(new ActionOnFrame<>(Frame, callable));
+    61	
+    62	        return this;
+    63	    }
+    64	
+    65	    public Node addChild(Node child) {
+    66	        if (getSceneTree() == null) {
+    67	            throw new NodeNotReadyException(this, "Adding child nodes");
+    68	        }
+    69	
+    70	        child.setParentNode(this);
+    71	        child.setSceneTree(this.sceneTree);
+    72	
+    73	        childNodes.add(child);
+    74	
+    75	        child.treeEnter();
+    76	
+    77	        return this;
+    78	    }
+    79	
+    80	    public void queueMoveToChild(Node newParent) {
+    81	
+    82	        getSceneTree().getActionQueue().add(new ActionData(newParent, (parent) -> {
+    83	            if (parent.getSceneTree() == null) {
+    84	                throw new NodeNotReadyException(parent, "Moving to this node child nodes");
+    85	            }
+    86	
+    87	            getParentNode().getChildNodes().remove(this);
+    88	            parent.getChildNodes().add(this);
+    89	            setParentNode(parent);
+    90	        }));
+    91	    }
+    92	
+    93	    public void treeEnter() {}
+    94	
+    95	    public Node forAllChildren(Action<Node> callable) {
+    96	        for (Node child : getChildNodes()) {
+    97	            callable.invoke(child);
+    98	        }
+    99	
+   100	        return this;
+   101	    }
+   102	
+   103	    public void queueFree() {
+   104	        sceneTree.getActionQueue().add(new ActionData(this, Node::free));
+   105	    }
+   106	
+   107	    public void free() {
+   108	        while (!childNodes.isEmpty()) {
+   109	            childNodes.get(0).free();
+   110	        }
+   111	
+   112	        parentNode.getChildNodes().remove(this);
+   113	    }
+   114	
+   115	    public void update(int currentFrame) {
+   116	        if (!isActive()) {
+   117	            return;
+   118	        }
+   119	
+   120	        int i = 0;
+   121	        while (i < actionsOnFrames.size()) {
+   122	            if (actionsOnFrames.get(i).getActionFrame() == currentFrame) {
+   123	                actionsOnFrames.get(i).invoke(this);
+   124	                Debug.log(Level.FINE, String.format("Action in frame %d: %s", currentFrame, this.toString()));
+   125	                actionsOnFrames.remove(i);
+   126	            }
+   127	            else {
+   128	                i+=1;
+   129	            }
+   130	        }
+   131	
+   132	        if (!isActive()) {
+   133	            return;
+   134	        }
+   135	
+   136	        for (Node child : getChildNodes()) {
+   137	            child.update(currentFrame);
+   138	        }
+   139	    }
+   140	}
+
+---------------------------------------------------------
+engine/scene/nodes/NodeNotReadyException.java:
+
+     1	package engine.scene.nodes;
+     2	
+     3	public class NodeNotReadyException extends RuntimeException {
+     4	    public NodeNotReadyException(Node node, String error) {
+     5	        System.out.println(node);
+     6	
+     7	        System.out.println("Is not have been initialised for " + error);
+     8	    }
+     9	}
+
+---------------------------------------------------------
+engine/scene/nodes/PositionNode.java:
+
+     1	package engine.scene.nodes;
+     2	
+     3	import lombok.*;
+     4	import engine.structs.IntVector2;
+     5	
+     6	@Getter
+     7	@NoArgsConstructor
+     8	public class PositionNode extends Node implements Comparable<DrawableNode> {
+     9	    @NonNull
+    10	    IntVector2 localPosition = new IntVector2(0,0);
+    11	    @NonNull
+    12	    IntVector2 globalPosition = new IntVector2(0,0);
+    13	
+    14	    public PositionNode(IntVector2 localPosition) {
+    15	        this.localPosition = localPosition;
+    16	    }
+    17	
+    18	    public void setLocalPosition(IntVector2 position) {
+    19	        globalPosition = globalPosition.plus(new IntVector2(position.X - localPosition.X, position.Y - localPosition.Y));
+    20	        localPosition = position;
+    21	
+    22	    }
+    23	
+    24	    @Override
+    25	    public void setParentNode(Node parentNode) {
+    26	        super.setParentNode(parentNode);
+    27	
+    28	        if (parentNode instanceof PositionNode) {
+    29	            IntVector2 parentGlobalPosition = ((PositionNode)parentNode).getGlobalPosition();
+    30	
+    31	            localPosition = new IntVector2(this.localPosition.X - parentGlobalPosition.X,this.localPosition.Y - parentGlobalPosition.Y);
+    32	//            globalPosition = this.globalPosition.plus(parentGlobalPosition);
+    33	        }
+    34	    }
+    35	
+    36	    @Override
+    37	    public int compareTo(DrawableNode o) {
+    38	        int YDifference = this.globalPosition.Y - o.getGlobalPosition().Y;
+    39	        int XDifference = this.globalPosition.X - o.getGlobalPosition().X;
+    40	
+    41	        if (YDifference == 0) {
+    42	            return XDifference;
+    43	        }
+    44	        else {
+    45	            return YDifference;
+    46	        }
+    47	    }
+    48	}
+
+---------------------------------------------------------
+engine/scene/SceneTree.java:
+
+     1	package engine.scene;
+     2	
+     3	import lombok.Builder;
+     4	import lombok.Getter;
+     5	import lombok.Setter;
+     6	import application.main.scene.Environment;
+     7	import engine.structs.ActionData;
+     8	import engine.interfaces.Findable;
+     9	import engine.scene.nodes.DrawableNode;
+    10	import engine.scene.nodes.Node;
+    11	
+    12	import java.util.*;
+    13	
+    14	@Getter
+    15	public class SceneTree {
+    16	    private final List<Node> nodes = new ArrayList<>();
+    17	
+    18	    @Setter
+    19	    private final Node root;
+    20	
+    21	
+    22	    private final Queue<ActionData> actionQueue = new ArrayDeque<>();
+    23	    private final List<DrawableNode> drawableNodesRenderQueue = new ArrayList<>();
+    24	
+    25	    private final Environment environment = new Environment();;
+    26	
+    27	    public SceneTree(Node root)
+    28	    {
+    29	        this.root = root;
+    30	    }
+    31	
+    32	    public SceneTree() {
+    33	        root = new Node(this);
+    34	    }
+    35	    public void sortDrawables() {
+    36	        Collections.sort(drawableNodesRenderQueue);
+    37	    }
+    38	    public void update(int CurrentFrame) {
+    39	        root.update(CurrentFrame);
+    40	    }
+    41	    public void releaseActionQueue() {
+    42	        for (int i = 0; i <  actionQueue.size(); i++) {
+    43	            actionQueue.remove().invoke();
+    44	        }
+    45	    }
+    46	    public void releaseRenderQueue() {
+    47	        drawableNodesRenderQueue.clear();
+    48	    }
+    49	
+    50	    public String printTree() {
+    51	        System.out.println(" ┖╴root");
+    52	
+    53	        StringBuilder builder = new StringBuilder();
+    54	
+    55	        printChildren("   ", root, builder);
+    56	
+    57	        return builder.toString();
+    58	    }
+    59	
+    60	    public Node find(Findable labmda) {
+    61	        return findInNodesChildrenRecursively(labmda, root);
+    62	    }
+    63	
+    64	    private Node findInNodesChildrenRecursively(Findable lambda, Node parent) {
+    65	        for (Node child : parent.getChildNodes()) {
+    66	            if (findInNodesChildrenRecursively(lambda, child) == null) {
+    67	                continue;
+    68	            };
+    69	
+    70	            if (lambda.compare(child))
+    71	                return child;
+    72	        }
+    73	
+    74	        return null;
+    75	    }
+    76	
+    77	    void printChildren(String trail, Node node, StringBuilder builder) {
+    78	        List<Node> children = node.getChildNodes();
+    79	
+    80	        int childCount = children.size();
+    81	
+    82	        for (int i = 0; i < childCount; i++) {
+    83	
+    84	
+    85	            Node child = children.get(i);
+    86	            String out;
+    87	
+    88	            if (i == childCount - 1) {
+    89	                out = trail +" ┖╴"+ child;
+    90	            }
+    91	            else {
+    92	                out = trail +" ┠╴"+ child;
+    93	            }
+    94	
+    95	            builder.append(out);
+    96	            builder.append("\n");
+    97	            if (!child.getChildNodes().isEmpty()) {
+    98	                if (i == childCount - 1) {
+    99	                    printChildren(trail + "   ", child, builder);
+   100	                }
+   101	                else {
+   102	                    printChildren(trail + " ┃ ", child, builder);
+   103	                }
+   104	            }
+   105	        }
+   106	    }
+   107	}
+
+---------------------------------------------------------
+engine/structs/ActionData.java:
+
+     1	package engine.structs;
+     2	
+     3	import lombok.AllArgsConstructor;
+     4	import lombok.Data;
+     5	import engine.interfaces.Action;
+     6	import engine.scene.nodes.Node;
+     7	
+     8	@Data
+     9	@AllArgsConstructor
+    10	public class ActionData {
+    11	    Node caller;
+    12	
+    13	    Action<Node> action;
+    14	
+    15	    public void invoke() {
+    16	        action.invoke(caller);
+    17	    }
+    18	}
+---------------------------------------------------------
+engine/structs/ActionOnFrame.java:
+
+     1	package engine.structs;
+     2	
+     3	import lombok.AllArgsConstructor;
+     4	import lombok.Getter;
+     5	import lombok.NonNull;
+     6	import engine.interfaces.Action;
+     7	
+     8	@AllArgsConstructor
+     9	public class ActionOnFrame<T> {
+    10	    @Getter
+    11	    final int ActionFrame;
+    12	    @NonNull
+    13	    Action<T> action;
+    14	    public void invoke(T instance) {
+    15	        action.invoke(instance);
+    16	    }
+    17	}
+
+---------------------------------------------------------
+engine/structs/IntVector2.java:
+
+     1	package engine.structs;
+     2	
+     3	import lombok.*;
+     4	
+     5	@ToString(includeFieldNames = true)
+     6	@AllArgsConstructor
+     7	public class IntVector2 {
+     8	    public int X;
+     9	    public int Y;
+    10	
+    11	
+    12	    public IntVector2 plus(IntVector2 other) {
+    13	        return new IntVector2(this.X + other.X, this.Y + other.Y);
+    14	    }
+    15	    public boolean equals(IntVector2 other) {
+    16	        return this.X == other.X && this.Y == other.Y;
+    17	    }
+    18	}
+
+---------------------------------------------------------
+Notes:
+
+     1	abstract class PocketItem {
+     2	    public void AddItem(List<PocketItem> list) {
+     3	        list.add(this);
+     4	
+     5	        System.out.println("Положил в карман " + GetName());
+     6	    }
+     7	
+     8	    public abstract String GetName();
+     9	}
+    10	
+    11	class Garmoshka extends PocketItem {
+    12	    public void play() {
+    13	        System.out.println(("Играет "));
+    14	    }
+    15	
+    16	    public String GetName() {
+    17	        return "Гормошка";
+    18	    }
+    19	}
+    20	
+    21	class Snusnumrik {
+    22	
+    23	    public static void AddFurniture(dom.Furniture()) {
+    24	        ....
+    25	    }
+    26	
+    27	    List<PocketItem> PocketItems = new ArrayList<>();
+    28	    public Snusnumrik() {
+    29	        Garmoshka garmoshka = new Garmoshka();
+    30	
+    31	        garmoshka.AddItem(PocketItems);
+    32	    }
+    33	}
+    34	
+    35	
+    36	class Dom {
+    37	
+    38	    void AddFurniture(Furniture furniture) {
+    39	        huy(new dom.furnitura() {});
+    40	    }
+    41	}
+    42	
+    43	Dom dom ...
+    44	
+
+---------------------------------------------------------

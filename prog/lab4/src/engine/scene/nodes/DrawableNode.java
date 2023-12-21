@@ -1,11 +1,12 @@
 package engine.scene.nodes;
 
+import engine.interfaces.Renderable;
 import lombok.*;
-import engine.render.Screen;
+import application.extensions.Screen;
 
 @Data
-public abstract class DrawableNode extends PositionNode {
-    boolean isVisible = true;
+public abstract class DrawableNode extends PositionNode implements Renderable {
+    private boolean isVisible = true;
     public abstract void renderToScreen(Screen screen);
 
     @Override

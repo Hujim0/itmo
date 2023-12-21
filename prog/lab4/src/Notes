@@ -20,6 +20,10 @@ class Garmoshka extends PocketItem {
 
 class Snusnumrik {
 
+    public static void AddFurniture(dom.Furniture()) {
+        ....
+    }
+
     List<PocketItem> PocketItems = new ArrayList<>();
     public Snusnumrik() {
         Garmoshka garmoshka = new Garmoshka();
@@ -27,3 +31,14 @@ class Snusnumrik {
         garmoshka.AddItem(PocketItems);
     }
 }
+
+
+class Dom {
+
+    void AddFurniture(Furniture furniture) {
+        huy(new dom.furnitura() {});
+    }
+}
+
+Dom dom ...
+

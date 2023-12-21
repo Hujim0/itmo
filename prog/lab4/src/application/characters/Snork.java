@@ -1,12 +1,13 @@
 package application.characters;
 
+import application.extensions.Sensible;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import main.scene.enums.EnvironmentTemperature;
-import main.scene.enums.SnorkState;
+import application.main.scene.enums.EnvironmentTemperature;
+import application.main.scene.enums.SnorkState;
 import engine.scene.nodes.Node;
-import main.scene.Environment;
+import application.main.scene.Environment;
 
 @Getter
 @AllArgsConstructor
@@ -25,5 +26,26 @@ public class Snork extends Node implements Sensible {
         if (environment.getTemperature() == EnvironmentTemperature.COLD_TEMREATURE) {
             System.out.println("Фрекен Снорк тихо плакала, уткнувшись в перину.");
         }
+    }
+
+    @Override
+    public void treeEnter() {
+        addAction(
+        0, (obj) -> {
+            Snork instance = (Snork) obj;
+            instance.changeState(SnorkState.LOST_SPEECH, "на мгновение утратила дар речи.");
+        });
+        addAction(1, (obj) -> {
+            Snork instance = (Snork) obj;
+            instance.changeState(SnorkState.LEANED_OVER, "наклонилась. И начала трясти Муми-тролля");
+
+        });
+        addAction(2, (obj) -> {
+            Snork instance = (Snork) obj;
+            instance.changeState(SnorkState.HUGGING_AND_CRYING, "и Муми-Троль долго сидели прижавшись друг к другу.");
+            instance.reactToEnvironment(instance.getSceneTree().getEnvironment());
+
+
+        });
     }
 }

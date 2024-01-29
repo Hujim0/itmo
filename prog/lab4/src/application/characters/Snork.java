@@ -1,18 +1,45 @@
 package application.characters;
 
+import application.extensions.CanBeDescribed;
+import application.sceneNodes.ViewDescriber;
+import engine.scene.EnvironmentEmptyException;
 import application.extensions.Sensible;
+import engine.scene.SceneTree;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import application.main.scene.enums.EnvironmentTemperature;
-import application.main.scene.enums.SnorkState;
+import engine.structs.EnvironmentTemperature;
 import engine.scene.nodes.Node;
-import application.main.scene.Environment;
+import engine.scene.Environment;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Snork extends Node implements Sensible {
+
+    Fringe snorkFringe = new Fringe();
+
+    public static final String dreamDescription = "Ей приснилось, что мордочка у нее совсем маленькая и необыкновенно очаровательная.";
+
+    @Data
+    static final class Fringe implements CanBeDescribed {
+        FringeState currentState;
+        public String describe() {
+            return "Её челка была совершенно " + currentState.getDescription();
+        }
+    }
+
+    @Getter
+    enum FringeState {
+        DRY("сухая"),
+        WET("мокрая");
+
+        private final String description;
+        FringeState(String description) {
+            this.description = description;
+        }
+    }
 
     SnorkState state = SnorkState.DEFAULT;
     public void changeState(SnorkState state, String message) {
@@ -28,19 +55,62 @@ public class Snork extends Node implements Sensible {
         }
     }
 
+    public void wakeUpBy(EnvironmentTemperature temperature) {
+        switch (temperature) {
+            case COLD_TEMREATURE -> {
+                System.out.println("Снорк проснулась от холода");
+            }
+            case HOT_TEMPERATURE -> {
+                System.out.println("Снорк проснулась от жары");
+            }
+            default -> {
+                throw new RuntimeException("Not implemented");
+            }
+        }
+    }
+
     @Override
     public void treeEnter() {
+        snorkFringe.setCurrentState(FringeState.WET);
+
+        addAction(0, (obj) -> {
+            Environment environment = obj.getSceneTree().getEnvironment();
+
+            wakeUpBy(environment.getTemperature());
+
+            System.out.println(snorkFringe.describe());
+
+            try {
+                System.out.println(environment.describeViewFully());
+            } catch (EnvironmentEmptyException e) {
+                throw new RuntimeException("env is empty");
+            }
+
+
+            for ()
+        });
+
+        addAction(1, (obj) -> {
+            Snork instance = (Snork) obj;
+            instance.changeState(SnorkState.TRY_TO_WATCH_DREAM_FULLY, "попыталась досмотреть свой приятный сон.");
+            System.out.println(dreamDescription);
+        });
+
+        addAction(2, (obj) -> {
+            Snork instance = (Snork) obj;
+            instance.changeState(SnorkState.FEELING_STIRRED, "быстро села и огляделась вокруг.");
+        });
         addAction(
-        0, (obj) -> {
+        4, (obj) -> {
             Snork instance = (Snork) obj;
             instance.changeState(SnorkState.LOST_SPEECH, "на мгновение утратила дар речи.");
         });
-        addAction(1, (obj) -> {
+        addAction(5, (obj) -> {
             Snork instance = (Snork) obj;
             instance.changeState(SnorkState.LEANED_OVER, "наклонилась. И начала трясти Муми-тролля");
 
         });
-        addAction(2, (obj) -> {
+        addAction(6, (obj) -> {
             Snork instance = (Snork) obj;
             instance.changeState(SnorkState.HUGGING_AND_CRYING, "и Муми-Троль долго сидели прижавшись друг к другу.");
             instance.reactToEnvironment(instance.getSceneTree().getEnvironment());

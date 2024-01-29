@@ -19,7 +19,6 @@ public abstract class Renderer {
         while (currentFrame < amountOfFrames) {
             Debug.log(Level.FINEST, currentSceneTree.printTree());
 
-
             currentSceneTree.update(currentFrame);
 
             currentSceneTree.sortDrawables();

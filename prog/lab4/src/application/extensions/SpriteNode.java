@@ -8,8 +8,7 @@ import engine.structs.IntVector2;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SpriteNode extends DrawableNode implements Renderable {
-
+public class SpriteNode extends DrawableNode<Screen> implements Renderable<Screen> {
 
     SpriteData sprite;
 

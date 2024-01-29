@@ -1,0 +1,81 @@
+\documentclass[10pt,pdf,hyperref={unicode},aspectratio=169]{beamer}
+\usepackage[T2A]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage[english, russian]{babel}
+\usepackage{amssymb}
+
+\definecolor{coolgreen}{RGB}{32, 129, 85}
+
+\usepackage{indentfirst}
+
+
+\title{Лабораторная работа №6}
+\author{Григорьев Давид}
+\date{2023}
+
+\defbeamertemplate*{frametitle}{shadow theme}{%
+	\vskip 18pt\leavevmode%
+	\hbox to \paperwidth{%
+		\hbox to 7.5em{\hskip -4.5ex\vbox to 18pt{\vskip
+				-1.8ex\includegraphics[width=7.5em]{Эпичный комп Балакшина.png}}}%
+		\begin{beamercolorbox}[wd=\paperwidth,ht=2ex,dp=3pt,left]{title in head/foot}%
+			\ \textcolor[gray]{0.4}{\insertframetitle}
+			\textcolor[gray]{0.8}{\rule{\linewidth}{0.5mm}}
+	\end{beamercolorbox}}
+}
+
+\begin{document}
+
+\begin{frame}
+	
+\frametitle{Перевод из СС с основанием 2 в СС с основанием 4}
+
+\textbf{Сложный путь: } 1) CC-2 -> CC-10: $10100_{(2)} = 20_{(10)}$ \\
+\qquad\qquad\qquad\qquad 2) CC-10 -> CC-4: $20_{(10)} = 110_{(4)} => 10100_{(2)} = 110_{4)}$\\
+
+Примечание: ''СС-N'' означает ''система счисления с основанием N''\\
+\vspace{3em}
+\textbf{Простой путь:}
+
+\begin{center}
+	$x_{i+1}2^{i+1} + x_{i}2^{i} + \cdots + x_{3}2^{3} + x_{2}2^{2} + x_{1}2^{1} + x_{0}2^{0}$\\
+	
+	$\Downarrow$	
+	
+	$x_{2k+1}2^{2k+1} + x_{2k}2^{2k} + \cdots + x_{3}2^{2 \cdot 1 + 1} + x_{2}2^{2 \cdot 1} + x_{1}2^{1} + x_{0}2^{0}$\\
+	
+	$\Downarrow$	
+	
+	$2^{2k}(x_{2k+1}2^{1} + x_{2k}) + \cdots + 2^{2}(x_{3}2^{1} + x_{2}) + 2^0(x_{1}2^1 + x_{0})$
+	
+	$\Downarrow$
+	
+	$4^k(x_{2k+1}2^{1} + x_{2k}) + \cdots + 4^{1}(x_{3}2^{1} + x_{2}) + 4^{0}(x_{1}2^{1} + x_{0})$
+	
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+	
+	\frametitle{Преобразование из CC-N в CC-$N^{k}$ и обратно}
+	\footnotesize
+	\textcolor{coolgreen}{Из СС-N в СС-$N^{k}$}
+	\begin{itemize}
+		\item дополнить число, записанное в СС с основанием N, незначащими нулями так, чтобы количество цифр было кратно k;
+		\item разбить полученное число на группы по k цифр, начиная от нуля;
+		\item заменить каждую такую группу эквивалентным числом, записанным в СС с основанием N
+	\end{itemize}
+	\qquad\qquad\qquad\qquad Задача: $1020101_{(3)} = ?_{(27)}$\\
+	\qquad\qquad\qquad\qquad Решение: $1020101_{(3)} = 001 020 101_{(3)} = 16A?_{(27)}$\\
+	
+	\textcolor{coolgreen}{Из СС-$N^{k}$ в СС-N}
+	\begin{itemize}
+		\item заменить каждую цифру числа, записанного в CC с основанием N$^{k}$, эквивалентным набором из k цифр CC с основанием N.
+	\end{itemize}
+	\qquad\qquad\qquad\qquad Задача: $1020101_{(3)} = ?_{(27)}$\\
+	\qquad\qquad\qquad\qquad Решение: $1020101_{(3)} = 001 020 101_{(3)} = 16A?_{(27)}$
+	
+\end{frame}
+	
+\end{document}

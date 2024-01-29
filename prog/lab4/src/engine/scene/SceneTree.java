@@ -1,9 +1,7 @@
 package engine.scene;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import application.main.scene.Environment;
 import engine.structs.ActionData;
 import engine.interfaces.Findable;
 import engine.scene.nodes.DrawableNode;
@@ -21,8 +19,8 @@ public class SceneTree {
 
     private final Queue<ActionData> actionQueue = new ArrayDeque<>();
     private final List<DrawableNode> drawableNodesRenderQueue = new ArrayList<>();
-
-    private final Environment environment = new Environment();;
+    @Setter
+    private Environment environment;
 
     public SceneTree(Node root)
     {
@@ -48,10 +46,10 @@ public class SceneTree {
     }
 
     public String printTree() {
-        System.out.println(" ┖╴root");
-
         StringBuilder builder = new StringBuilder();
 
+        builder.append(" ┖╴root");
+        builder.append("\n");
         printChildren("   ", root, builder);
 
         return builder.toString();

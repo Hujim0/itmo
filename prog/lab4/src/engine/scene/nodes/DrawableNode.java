@@ -5,9 +5,9 @@ import lombok.*;
 import application.extensions.Screen;
 
 @Data
-public abstract class DrawableNode extends PositionNode implements Renderable {
+public abstract class  DrawableNode<T> extends PositionNode implements Renderable<T> {
     private boolean isVisible = true;
-    public abstract void renderToScreen(Screen screen);
+    public abstract void renderToScreen(T screen);
 
     @Override
     public void update(int currentFrame) {

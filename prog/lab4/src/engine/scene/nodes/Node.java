@@ -77,6 +77,7 @@ public class Node {
         return this;
     }
 
+
     public void queueMoveToChild(Node newParent) {
 
         getSceneTree().getActionQueue().add(new ActionData(newParent, (parent) -> {

@@ -1,0 +1,70 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{graphicx}
+\usepackage[T2A]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage[english, russian]{babel}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage[left=2cm,right=2cm,top=1cm,bottom=0.5cm,bindingoffset=0cm]{geometry}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{tabularx}
+\usepackage{nicematrix}
+\usepackage{multirow}
+\usepackage{multicol}
+
+\begin{document}
+
+\section{Билет 4. Гомоморфизмы колец. Ядро и образ гомоморфизма}
+Гомоморфизм (единая форма) - это функция, при которой у каждого аргумента есть только один образ и при этом выполняется:\\
+
+\begin{center}
+	$f(a + b) = f(a) + f(b)$ и $f(a \cdot b) = f(a) \cdot f(b)$
+\end{center}
+
+Очевидным примером будет $f(x) = x, f: Z \rightarrow Z $, где все свойства будут выполняться. \\
+Функции вида $f(x) = ax$ не будут подходить по умножению\\
+
+Ядро (корни) гомоморфизма f — это $Ker(f ) = \{ x \in K : f(x) = 0 \}$.\\
+Ядро гомоморфизма - это такое множество, которое содержит все элементы кольца, при котором отображение этого элемнта будет нулем.\\
+
+Если гомоморфизм $f(x)$, то $Ker(f) = {0}$
+
+Образ гомоморфизма - то же самое, что и образ функции: множество всех отображений.
+
+$Im(f) = Z$
+
+Пусть $K, L$ — кольца, $f : K \rightarrow L$ — гомоморфизм колец.\\
+Тогда:\\
+1) $Ker(f )$ — подкольцо K.
+2) $Im(f )$ — подкольцо L.\\
+Доказательство.\\
+1) Пусть $a, b \in Ker(f)$. Тогда\\
+а) $f (a + b) = f (a) + f (b) = 0 + 0 = 0$, следовательно,\\
+$a + b \in Ker(f )$.
+\\
+б) $f (a \cdot b) = f(a) \cdot f(b) = 0 \cdot 0 = 0$, следовательно,
+$a \cdot b \in Ker(f )$.
+\\
+в) $f (-a) = -f (a) = -0_{L} = 0_{L}$.\\
+
+2) Пусть $y_{1}, y_{2} \in Im(f)$, а $x_{1}, x_{2} \in K$ таковы, что $f(x_{1}) = y_2$ и $f(x_2) = y_2$.
+Тогда \\
+а) $y_1 + y_2 = f(x_1) + f(x_2) = f (x_1 + x_2) \in Im(f)$ и $y_1 \cdot y_1 = f(x_1) \cdot f(x_2) \in Im(f).$
+\\
+б) $-y = -f(x) = f (-x) \in Im(f)$.
+
+\section{Билет 5. Типы гомоморфизмов. Мономорфизм и ядро}
+
+Типы гомоморфизма (как в матане)
+\\
+Инъекция - мономорфзима\\
+Суръекция - эпиморфизм\\
+Биекция - изоморфизм\\
+
+Инъекция, суръекция, биекция - для описания функций.\\
+мономорфизм, эпиморфизм, изоморфизм - для описания отображений.
+
+
+\end{document}

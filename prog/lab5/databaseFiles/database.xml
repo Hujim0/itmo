@@ -1,0 +1,29 @@
+<?xml version='1.0'?>
+<root>
+    <item>
+        <id>0</id>
+        <name>"Прога 2.15"</name>
+        <coordinates>
+            <x>10</x>
+            <y>20</y>
+        </coordinates>
+        <creationDate>
+            <year>2023</year>
+            <month>02</month>
+            <dateOfMonth>05</dateOfMonth>
+        </creationDate>
+        <studentsCount>
+            25
+        </studentsCount>
+        <averageMark>0.1</averageMark>
+        <formOfEducation>
+            FULL_TIME_EDUCATION
+        </formOfEducation>
+        <semesterEnum>
+            EIGHTH
+        </semesterEnum>
+        <groupAdmin>
+            Машусик зе бест
+        </groupAdmin>
+    </item>
+</root>

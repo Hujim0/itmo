@@ -1,0 +1,41 @@
+{
+  "studyGroupList": [
+    {
+      "id": 0,
+      "name": "123",
+      "coordinates": {
+        "x": 32.0,
+        "y": 43.0
+      },
+      "creationDate": "2024-03-09",
+      "studentsCount": 2,
+      "averageMark": 2,
+      "formOfEducation": "FULL_TIME_EDUCATION",
+      "semesterEnum": "EIGHTH",
+      "groupAdmin": {
+        "name": "sd",
+        "weight": 3.0,
+        "passportID": "1231232"
+      }
+    },
+    {
+      "id": 0,
+      "name": "h",
+      "coordinates": {
+        "x": 0.0,
+        "y": -1.0
+      },
+      "creationDate": "2024-03-09",
+      "studentsCount": 1,
+      "averageMark": 9,
+      "formOfEducation": "DISTANCE_EDUCATION",
+      "semesterEnum": "FOURTH",
+      "groupAdmin": {
+        "name": "m",
+        "weight": 9.0,
+        "passportID": "hhhhhhh",
+        "nationality": "GERMANY"
+      }
+    }
+  ]
+}

@@ -35,9 +35,7 @@ public class JsonFileParser<T> extends FileParser<T> {
     public T deserializeFromFile() throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(getFilePath().toString()))){
 
-            T instance = gson.fromJson(reader,classToSerialize);
-
-            return instance;
+            return gson.fromJson(reader,classToSerialize);
         }
         catch (JsonSyntaxException | JsonIOException e) {
             System.err.println(e.getMessage());

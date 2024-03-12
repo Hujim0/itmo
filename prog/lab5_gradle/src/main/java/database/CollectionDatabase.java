@@ -9,9 +9,14 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 
 @Getter
-public class CollectionDatabase<T> extends DatabaseDecorator<T> {
+public abstract class CollectionDatabase<T> implements Database<T> {
     private final Collection<T> collection;
     private final EntityBuilder<T> builder;
+
+    protected CollectionDatabase(Collection<T> collection, EntityBuilder<T> builder) {
+        this.collection = collection;
+        this.builder = builder;
+    }
 
     @Override
     public String getInfo() {
@@ -20,12 +25,6 @@ public class CollectionDatabase<T> extends DatabaseDecorator<T> {
                 "\nNumber of entries: " +
                 collection.size() +
                 "\n";
-    }
-
-    public CollectionDatabase(Collection<T> collectionInstance, EntityBuilder<T> builder, Database<T> decoratedDatabase) {
-        super(decoratedDatabase);
-        collection =collectionInstance;
-        this.builder = builder;
     }
 
     public String getAllElements() {
@@ -60,10 +59,5 @@ public class CollectionDatabase<T> extends DatabaseDecorator<T> {
 
     public void clearCollection() {
         collection.clear();
-    }
-
-    @Override
-    public void removeElementByKeyAndValue(String key, String value) {
-
     }
 }

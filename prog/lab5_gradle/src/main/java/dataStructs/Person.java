@@ -50,7 +50,7 @@ public class Person {
         if (passportID.length() < 7) {
             throw new IllegalValueException("PassportID should be longer than 6 characters!");
         }
-        else if(passportID.length() > 7) {
+        else if(passportID.length() >= 40) {
             throw new IllegalValueException("PassportID should be smaller than 40 characters!");
 
         }

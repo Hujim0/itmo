@@ -7,10 +7,7 @@ import commands.exceptions.CommandException;
 import commands.nativeCommands.HistoryCommand;
 import lombok.Getter;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -18,7 +15,6 @@ import java.util.function.Consumer;
  * Stores history of 11 last commands.
  */
 @Getter
-
 public class CommandProcessor extends AbstractCommandProcessor{
 
     public CommandProcessor() {
@@ -41,7 +37,7 @@ public class CommandProcessor extends AbstractCommandProcessor{
 
     public void executeCommand(String input, Consumer<String> standardOutput, Consumer<String> errorOutput) {
 
-        String[] commandSplit = input.split(" ", 2);
+        String[] commandSplit = input.trim().split(" ", 2);
 
         String commandName = commandSplit[0];
         String commandArgs = "";
@@ -54,7 +50,7 @@ public class CommandProcessor extends AbstractCommandProcessor{
                 throw new CommandDoesntExistsException(commandName);
             }
             String output = commands.get(commandName).execute(commandArgs);
-            if (!output.isBlank())
+            if (output != null && !output.isBlank())
                 standardOutput.accept(output);
         } catch (CommandException e) {
             errorOutput.accept(e.getMessage());
@@ -66,4 +62,18 @@ public class CommandProcessor extends AbstractCommandProcessor{
 
         history.add(commandName);
     }
+
+    public void executeCommands(Scanner scanner, Consumer<String> standardOutput, Consumer<String> errorOutput) {
+        while(scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+
+            if (line.isBlank() || line.startsWith("#")) {
+                continue;
+            }
+
+            executeCommand(scanner.nextLine(), standardOutput, errorOutput);
+        }
+    }
+
+
 }

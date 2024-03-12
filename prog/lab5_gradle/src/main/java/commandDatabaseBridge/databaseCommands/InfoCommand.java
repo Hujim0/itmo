@@ -2,17 +2,17 @@ package commandDatabaseBridge.databaseCommands;
 
 import commands.exceptions.CommandException;
 import commands.nativeCommands.Command;
-import database.DatabaseDecorator;
+import database.Database;
 
 public class InfoCommand implements Command {
-    DatabaseDecorator<?> database;
-    public InfoCommand(DatabaseDecorator<?> database) {
-        this.database = database;
-    }
-
+    Database<?> database;
     @Override
     public String execute(String args) throws CommandException {
         return database.getInfo();
+    }
+
+    public InfoCommand(Database<?> database) {
+        this.database = database;
     }
 
     @Override

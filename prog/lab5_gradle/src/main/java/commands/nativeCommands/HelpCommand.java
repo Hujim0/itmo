@@ -37,7 +37,7 @@ public class HelpCommand extends ProcessorAwareCommand implements OverloadedComm
             return builder.toString();
         }
 
-        builder.append("\n");
+        builder.append("\n\n    Syntax: ").append(command.getArgumentsSyntax()).append("\n");
 
         CommandArgument[] arguments = ((OverloadedCommand) command).getArguments();
 

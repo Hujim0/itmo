@@ -5,22 +5,23 @@ import commands.exceptions.IllegalCommandSyntaxException;
 import commands.nativeCommands.Command;
 import database.Database;
 
-public class ShowCommand implements Command {
-    Database<?> database;
-    public ShowCommand(Database<?> database) {
+public class SumOfAverageMark implements Command {
+    private final Database<?> database;
+
+    public SumOfAverageMark(Database<?> database) {
         this.database = database;
     }
 
     @Override
     public String execute(String args) throws CommandException {
         if (!args.isBlank()) {
-            throw new IllegalCommandSyntaxException("Command show doesn't accept any arguments!", this);
+            throw new IllegalCommandSyntaxException("The arguments should be empty.", this);
         }
-
-        return database.getAllElements();
+        return Long.toString(database.sumOfAverageMark());
     }
+
     @Override
     public String getDescription() {
-        return "Prints out all entries in database.";
+        return null;
     }
 }

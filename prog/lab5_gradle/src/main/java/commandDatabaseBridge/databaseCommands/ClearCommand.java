@@ -2,12 +2,12 @@ package commandDatabaseBridge.databaseCommands;
 
 import commands.exceptions.CommandException;
 import commands.nativeCommands.Command;
-import database.DatabaseDecorator;
+import database.Database;
 
 public class ClearCommand implements Command {
-    private final DatabaseDecorator<?> decorator;
+    private final Database<?> decorator;
 
-    public ClearCommand(DatabaseDecorator<?> decorator) {
+    public ClearCommand(Database<?> decorator) {
         this.decorator = decorator;
     }
 

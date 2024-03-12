@@ -5,6 +5,8 @@ import commands.CommandProcessor;
 import lombok.Data;
 
 import java.util.Scanner;
+import java.util.function.Consumer;
+
 @Data
 public class ConsoleProcessor {
 
@@ -25,6 +27,8 @@ public class ConsoleProcessor {
     public void startCommandLoop() {
         Scanner scanner = new Scanner(System.in);
 
+        System.out.println("Type \"help\" to see available commands.");
+
         while (isRunning) {
             commandProcessor.executeCommand(
                     scanner.nextLine(),
@@ -32,4 +36,8 @@ public class ConsoleProcessor {
                     System.err::println);
         }
     }
+
+
+
+
 }

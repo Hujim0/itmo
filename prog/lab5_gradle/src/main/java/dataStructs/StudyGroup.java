@@ -16,8 +16,6 @@ import java.util.Scanner;
 @Data
 public class StudyGroup implements DatabaseEntity {
 
-    private static int lastId;
-
     private long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     @NonNull
     private String name; //Поле не может быть null, Строка не может быть пустой
@@ -82,7 +80,6 @@ public class StudyGroup implements DatabaseEntity {
         setGroupAdmin(groupAdmin);
 
         setCreationDate(LocalDate.now());
-        id = lastId++;
     }
 
     @Override

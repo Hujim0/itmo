@@ -1,8 +1,9 @@
 package database;
 
+import dataStructs.FormOfEducation;
 import dataStructs.exceptions.IllegalValueException;
 
-import java.io.IOException;
+import java.util.Optional;
 
 /**
  * interface for general-purpose database. Should be created with decorator.
@@ -10,6 +11,15 @@ import java.io.IOException;
  * @param <T>
  */
 public interface Database<T> {
+    void removeGreater(long id);
+    void removeLower(long id);
+
+    long sumOfAverageMark();
+
+    String getElementsDescending();
+
+    Optional<Integer> CountLessThanFormOfEducation(FormOfEducation education);
+
     public enum Predicate {
         GREATER_THAN,
         LESS_THAN
@@ -25,12 +35,13 @@ public interface Database<T> {
     T createElementFromString(String input);
     String getAllElements();
     void updateElementById(long id, T new_element) throws IllegalValueException;
-    void removeElementByKeyAndValue(String key, String value) throws IllegalValueException;
+    boolean removeElementById(long id) throws IllegalValueException;
     void clearCollection();
     void removeFirstElement() throws IllegalValueException;
-    int countElementsByKeyAndValue(Predicate predicate, String key, String value) throws IllegalValueException;
+//    int countElementsByKeyAndValue(Predicate predicate, String key, String value) throws IllegalValueException;
     String getSortedElementsByKey(SortingOrder order, String key) throws IllegalValueException;
     String getConstructorSignature();
+    boolean addIfMin(T element);
 
     void serialize() throws Exception;
     void deserialize() throws Exception;

@@ -1,40 +1,76 @@
 {
   "studyGroupList": [
     {
-      "id": 0,
-      "name": "123",
+      "id": 2,
+      "name": "test",
       "coordinates": {
-        "x": 32.0,
-        "y": 43.0
+        "x": 0.0,
+        "y": 0.0
       },
-      "creationDate": "2024-03-09",
-      "studentsCount": 2,
-      "averageMark": 2,
+      "creationDate": "2024-03-12",
+      "studentsCount": 100,
+      "averageMark": 100,
       "formOfEducation": "FULL_TIME_EDUCATION",
       "semesterEnum": "EIGHTH",
       "groupAdmin": {
-        "name": "sd",
-        "weight": 3.0,
-        "passportID": "1231232"
+        "name": "admin",
+        "weight": 100.0,
+        "passportID": "1231231"
       }
     },
     {
-      "id": 0,
-      "name": "h",
+      "id": 3,
+      "name": "023",
       "coordinates": {
-        "x": 0.0,
-        "y": -1.0
+        "x": 21.0,
+        "y": 32.0
       },
-      "creationDate": "2024-03-09",
-      "studentsCount": 1,
-      "averageMark": 9,
-      "formOfEducation": "DISTANCE_EDUCATION",
-      "semesterEnum": "FOURTH",
+      "creationDate": "2024-03-12",
+      "studentsCount": 44,
+      "averageMark": 4,
+      "formOfEducation": "FULL_TIME_EDUCATION",
+      "semesterEnum": "EIGHTH",
       "groupAdmin": {
-        "name": "m",
-        "weight": 9.0,
-        "passportID": "hhhhhhh",
-        "nationality": "GERMANY"
+        "name": "123",
+        "weight": 23.0,
+        "passportID": "1231233"
+      }
+    },
+
+    {
+      "id": 5,
+      "name": "023",
+      "coordinates": {
+        "x": 21.0,
+        "y": 32.0
+      },
+      "creationDate": "2024-03-12",
+      "studentsCount": 44,
+      "averageMark": 4,
+      "formOfEducation": "FULL_TIME_EDUCATION",
+      "semesterEnum": "EIGHTH",
+      "groupAdmin": {
+        "name": "123",
+        "weight": 23.0,
+        "passportID": "1231233"
+      }
+    },
+    {
+      "id": 4,
+      "name": "023",
+      "coordinates": {
+        "x": 21.0,
+        "y": 32.0
+      },
+      "creationDate": "2024-03-12",
+      "studentsCount": 44,
+      "averageMark": 4,
+      "formOfEducation": "FULL_TIME_EDUCATION",
+      "semesterEnum": "EIGHTH",
+      "groupAdmin": {
+        "name": "123",
+        "weight": 23.0,
+        "passportID": "1231233"
       }
     }
   ]

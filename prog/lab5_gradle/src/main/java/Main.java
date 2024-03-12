@@ -16,19 +16,14 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-//        FileParser< StudyGroup> parser
-
         AbstractCommandProcessor processor = new CommandProcessor();
         ConsoleProcessor consoleProcessor = new ConsoleProcessor(processor);
 
         StudyGroupDatabase database = new StudyGroupDatabase(
-                new ArrayDeque<>(),
                 new EntityBuilder<>(
                         null,
                         () -> StudyGroup.createFromInput(new Scanner(System.in))),
-                new JsonFileParser<>(Path.of(args[0]), StudyGroupList.class),
-                new SimpleDatabase<>()
-        );
+                new JsonFileParser<>(Path.of(args[0]), StudyGroupList.class));
 
         new CommandDatabaseBridge<>(processor, database);
 

@@ -2,15 +2,13 @@ package commandDatabaseBridge.databaseCommands;
 
 import commands.exceptions.CommandException;
 import commands.nativeCommands.Command;
-import database.DatabaseDecorator;
-
-import java.io.IOException;
+import database.Database;
 
 public class SaveCommand implements Command {
 
-    private final DatabaseDecorator<?> decorator;
+    private final Database<?> decorator;
 
-    public SaveCommand(DatabaseDecorator<?> decorator) {
+    public SaveCommand(Database<?> decorator) {
         this.decorator = decorator;
     }
 
@@ -27,6 +25,6 @@ public class SaveCommand implements Command {
 
     @Override
     public String getDescription() {
-        return null;
+        return "Saves database to the file.";
     }
 }

@@ -4,20 +4,20 @@ import commands.CommandArgument;
 import commands.exceptions.CommandException;
 import commands.exceptions.IllegalCommandSyntaxException;
 import commands.nativeCommands.OverloadedCommand;
-import database.DatabaseDecorator;
+import database.Database;
 
 public class UpdateCommandById<T> implements OverloadedCommand {
 
-    private final DatabaseDecorator<T> decorator;
+    private final Database<T> database;
 
-    public UpdateCommandById(DatabaseDecorator<T> decorator) {
-        this.decorator = decorator;
+    public UpdateCommandById(Database<T> database) {
+        this.database = database;
     }
 
     @Override
     public String execute(String args) throws CommandException {
         if (args.isBlank()) {
-            throw new IllegalCommandSyntaxException("Command update can't be empty!", this);
+            throw new IllegalCommandSyntaxException("Arguments of the command update can't be empty!", this);
         }
         try {
             String[] argsSplit = args.split(" ", 2);
@@ -26,11 +26,11 @@ public class UpdateCommandById<T> implements OverloadedCommand {
 
 
             if (argsSplit.length == 1) {
-                decorator.updateElementById(id, decorator.createElementFromInput());
+                database.updateElementById(id, database.createElementFromInput());
 
             }
             else if (argsSplit.length == 2) {
-                decorator.updateElementById(id, decorator.createElementFromString(argsSplit[1]));
+                database.updateElementById(id, database.createElementFromString(argsSplit[1]));
             }
             else {
                 throw new IllegalCommandSyntaxException("Wrong number of parameters.", this);
@@ -40,8 +40,7 @@ public class UpdateCommandById<T> implements OverloadedCommand {
             throw new IllegalCommandSyntaxException("Expected a number in {id}.", this);
         }
 
-
-        return null;
+        return "";
     }
 
     @Override

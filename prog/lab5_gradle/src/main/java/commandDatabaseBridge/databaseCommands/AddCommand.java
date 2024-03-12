@@ -3,14 +3,13 @@ package commandDatabaseBridge.databaseCommands;
 import commands.CommandArgument;
 import commands.exceptions.CommandException;
 import commands.nativeCommands.OverloadedCommand;
-import database.CollectionDatabase;
-import database.DatabaseDecorator;
+import database.Database;
 
 public class AddCommand<T> implements OverloadedCommand {
 
-    DatabaseDecorator<T> database;
+    Database<T> database;
 
-    public AddCommand(DatabaseDecorator<T> database) {
+    public AddCommand(Database<T> database) {
         this.database = database;
 
     }
@@ -18,7 +17,7 @@ public class AddCommand<T> implements OverloadedCommand {
     @Override
     public String execute(String args) throws CommandException {
         database.addElement(database.createElementFromInput());
-        return "Done.";
+        return "";
     }
 
     @Override

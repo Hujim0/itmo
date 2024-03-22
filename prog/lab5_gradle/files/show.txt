@@ -1,0 +1,4 @@
+Type: ArrayDeque
+Number of entries: 4
+Initialization date: Sat Mar 09 01:27:20 MSK 2024
+Last update date: Tue Mar 12 16:18:04 MSK 2024

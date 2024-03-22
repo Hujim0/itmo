@@ -1,40 +1,79 @@
-DROP TABLE IF EXISTS People;
-DROP TABLE IF EXISTS Actions_with_items;
-DROP TABLE IF EXISTS Items;
+DROP TABLE IF EXISTS PEOPLE cascade;
+DROP TABLE IF EXISTS CONVERSATIONS cascade;
+DROP TABLE IF EXISTS ACTIONS_IN_CONVERSATIONS cascade;
+DROP TABLE IF EXISTS ROBOTS cascade;
+DROP TABLE IF EXISTS ROBOT_FEATURES cascade;
+DROP TABLE IF EXISTS EMOTIONS cascade;
+DROP TABLE IF EXISTS FEATURES cascade;
 
+CREATE TYPE CONVERSATION_MOOD as enum ('вялый', 'бесплодный', 'скучный', 'глубокий');
+CREATE TYPE CONVERSATION_LENGTH as enum('краткий', 'долгий');
 
-CREATE TABLE People(
-    person_id INT CONSTRAINT person_id_pk PRIMARY KEY,
-    name varchar(32)
+CREATE TABLE CONVERSATIONS(
+    id serial PRIMARY KEY,
+    about text NULL,
+    length CONVERSATION_LENGTH,
+    mood CONVERSATION_MOOD
 );
 
-CREATE TABLE Actions_with_items(
-    action_id INT CONSTRAINT action_id_pk PRIMARY KEY,
-    status varchar(1024) NOT NULL,
-    item_id INT,
-    consequence_of_action_id INT,
-    who_did_it_id INT
+CREATE TABLE PEOPLE(
+    id serial PRIMARY KEY,
+    gender boolean,
+    name varchar(64),
+    conversation_id bigint references CONVERSATIONS(id)
 );
 
-CREATE TABLE Items(
-    item_id INT CONSTRAINT item_id_pk PRIMARY KEY,
-    item_name varchar(32) NOT NULL
+CREATE TABLE ACTIONS_IN_CONVERSATIONS(
+    id serial PRIMARY KEY,
+    acting_person_id bigint references PEOPLE(id),
+    action_description text,
+    conversation_id bigint references CONVERSATIONS(id)
 );
 
-INSERT INTO People(person_id, name)
-VALUES (1, "Боумен"),
-       (2, "Уайтхед");
+CREATE TABLE ROBOTS(
+    id serial PRIMARY KEY,
+    model text,
+    conversation_id bigint references CONVERSATIONS(id)
+);
 
-INSERT INTO Actions_with_items(action_id, status, item_id, consequence_of_action_id, who_did_it_id)
-VALUES (1, 'Сломано', 1, NULL, 1),
-       (2, 'Нажата', 2, NULL, 1),
-       (3, 'Внешне ничего не изменилось', 3, 2, NULL),
-       (4, 'Пульсирующие кривы начали убыстрять темп', 4, 2, NULL),
-       (5, 'Уайтхед возвращался к жизни из гипотермического сна', NULL, 4, 2);
+CREATE TABLE ROBOT_FEATURES(
+    id serial PRIMARY KEY,
+    description text,
+    robot_id bigint references ROBOTS(id)
+);
 
+CREATE TABLE EMOTIONS(
+    id serial PRIMARY KEY,
+    person_id bigint references PEOPLE(id),
+    description text,
+    cause text NULL,
+    intensity float CONSTRAINT intensity_range CHECK ( intensity>=0 AND intensity <= 10 )
+);
 
-INSERT INTO Items(item_id, item_name)
-VALUES (1, 'Печать"),
-       (2, 'Кнопка''),
-       (3, 'Автомат'),
-        (4, 'Панель датчиков');
+CREATE TABLE FEATURES(
+    id serial PRIMARY KEY,
+    description text,
+    person_id bigint references PEOPLE(id)
+);
+
+INSERT INTO CONVERSATIONS(id, about, length, mood) VALUES
+   (DEFAULT, 'допрос', 'краткий', 'глубокий');
+
+INSERT INTO ROBOTS(id, model, conversation_id) VALUES
+    (DEFAULT, 'r2d2', 0);
+
+INSERT INTO ROBOT_FEATURES(id, description, robot_id) VALUES
+    (DEFAULT, 'краткость', 0),
+    (DEFAULT, 'точность', 0),
+    (DEFAULT, 'может привести в отчаяние', 0);
+
+INSERT INTO PEOPLE(id, gender, name, conversation_id) VALUES
+    (DEFAULT, false, 'Олвин', 0),
+    (DEFAULT, false, 'ХИВЛА', 0);
+
+INSERT INTO EMOTIONS(id, person_id, description, cause, intensity) VALUES
+    (DEFAULT, 0, 'отчаяние', 'диалог с роботом', 8),
+    (DEFAULT, 0, 'обессилен', 'диалог с роботом', 6);
+
+INSERT INTO ACTIONS_IN_CONVERSATIONS(id, acting_person_id, action_description, conversation_id) VALUES
+    (DEFAULT, 1, 'вмешался в диалог', 0);

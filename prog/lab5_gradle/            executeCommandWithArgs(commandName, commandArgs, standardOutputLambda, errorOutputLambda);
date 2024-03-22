@@ -1,0 +1,4 @@
+2, test, (0.0, 0.0), 2024-03-12, 100, 100, FULL_TIME_EDUCATION, EIGHTH, Person(name=admin, birthday=null, weight=100.0, passportID=1231231, nationality=null)
+3, 023, (21.0, 32.0), 2024-03-12, 44, 4, FULL_TIME_EDUCATION, EIGHTH, Person(name=123, birthday=null, weight=23.0, passportID=1231233, nationality=null)
+5, 023, (21.0, 32.0), 2024-03-12, 44, 4, FULL_TIME_EDUCATION, EIGHTH, Person(name=123, birthday=null, weight=23.0, passportID=1231233, nationality=null)
+4, 023, (21.0, 32.0), 2024-03-12, 44, 4, FULL_TIME_EDUCATION, EIGHTH, Person(name=123, birthday=null, weight=23.0, passportID=1231233, nationality=null)

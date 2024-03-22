@@ -1,0 +1,1 @@
+scp -P 2222 script.sql s389491@helios.cs.ifmo.ru:~/databases/lab1/script.sql

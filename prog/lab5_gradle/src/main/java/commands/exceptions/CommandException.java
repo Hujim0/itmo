@@ -1,6 +1,6 @@
 package commands.exceptions;
 
-public class CommandException extends Exception {
+public class CommandException extends RuntimeException {
     /**
      * General exception for all command commands.dataStructs.exceptions.
      * @param message exception massage.

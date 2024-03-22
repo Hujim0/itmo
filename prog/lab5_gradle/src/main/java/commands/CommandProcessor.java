@@ -1,12 +1,19 @@
 package commands;
 
 import commands.nativeCommands.Command;
+import commands.nativeCommands.ExecuteScriptCommand;
 import commands.nativeCommands.HelpCommand;
 import commands.exceptions.CommandDoesntExistsException;
 import commands.exceptions.CommandException;
 import commands.nativeCommands.HistoryCommand;
 import lombok.Getter;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -20,6 +27,7 @@ public class CommandProcessor extends AbstractCommandProcessor{
     public CommandProcessor() {
         commands.put("help", new HelpCommand(this));
         commands.put("history", new HistoryCommand(this));
+        commands.put("execute_script", new ExecuteScriptCommand(this));
     }
     private final HashMap<String, Command> commands = new HashMap<>();
 
@@ -37,23 +45,77 @@ public class CommandProcessor extends AbstractCommandProcessor{
 
     public void executeCommand(String input, Consumer<String> standardOutput, Consumer<String> errorOutput) {
 
+        Consumer<String> standardOutputLambda = standardOutput;
+        Consumer<String> errorOutputLambda = errorOutput;
+
         String[] commandSplit = input.trim().split(" ", 2);
 
         String commandName = commandSplit[0];
         String commandArgs = "";
+
         if (commandSplit.length == 2) {
             commandArgs = commandSplit[1];
         }
 
         try {
+            if (!commandArgs.contains(">")) {
+                executeCommandWithArgs(commandName, commandArgs, standardOutputLambda, errorOutputLambda);
+                return;
+            }
+
+            String[] argumentsSplit = commandArgs.split(">");
+
+            commandArgs = argumentsSplit[0];
+
+            String fileName = argumentsSplit[1];
+            Path path = Path.of(fileName);
+            try {
+                if (!Files.exists(path)) {
+                    Files.createFile(path);
+                }
+            } catch (IOException e) {
+                errorOutput.accept("Can't create file! " + e.getMessage());
+                return;
+            }
+
+            try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+                if (commandArgs.endsWith("2")) {
+                    commandArgs = commandArgs.substring(0, commandArgs.length() - 1);
+
+                    errorOutputLambda = (line) -> {
+                        try {
+                            writer.write(line);
+                        } catch (IOException e) {
+                            throw new CommandException(e.getMessage());
+                        }
+                    };
+                } else {
+                    standardOutputLambda = (line) -> {
+                        try {
+                            writer.write(line);
+                        } catch (IOException e) {
+                            throw new CommandException(e.getMessage());
+                        }
+                    };
+                }
+
+                executeCommandWithArgs(commandName, commandArgs, standardOutputLambda, errorOutputLambda);
+            }
+        } catch (IOException e) {
+            throw new CommandException(e.getMessage());
+        }
+    }
+
+    private void executeCommandWithArgs(String commandName, String args, Consumer<String> out, Consumer<String> err) {
+        try {
             if (!commands.containsKey(commandName)) {
                 throw new CommandDoesntExistsException(commandName);
             }
-            String output = commands.get(commandName).execute(commandArgs);
+            String output = commands.get(commandName).execute(args);
             if (output != null && !output.isBlank())
-                standardOutput.accept(output);
+                out.accept(output);
         } catch (CommandException e) {
-            errorOutput.accept(e.getMessage());
+            err.accept(e.getMessage());
         }
 
         if (history.size() == HISTORY_LENGTH) {

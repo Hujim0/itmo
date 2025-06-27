@@ -10,3 +10,12 @@
 [submodule "1-2_programming/prog-lab8"]
 	path = 1-2_programming/prog-lab8
 	url = https://github.com/huji-itmo/prog-lab8.git
+[submodule "1-3_calculus/calc3-grad-descent"]
+	path = 1-3_calculus/calc3-grad-descent
+	url = https://github.com/huji-itmo/calc3-grad-descent.git
+[submodule "1-3_calculus/calc2-integration-methods"]
+	path = 1-3_calculus/calc2-integration-methods
+	url = https://github.com/huji-itmo/calc2-integration-methods.git
+[submodule "1-3_calculus/calc3-integrals-numerical-method"]
+	path = 1-3_calculus/calc3-integrals-numerical-method
+	url = https://github.com/huji-itmo/calc3-integrals-numerical-method.git

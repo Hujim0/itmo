@@ -40,3 +40,6 @@ url = https://github.com/huji-itmo/calc3-integrals-numerical-method.git
 [submodule "4_computer_system_architecture/csa_experiments"]
 	path = 4_computer_system_architecture/csa_experiments
 	url = https://github.com/huji-itmo/csa_experiments.git
+[submodule "2_databases/lab3-hibernate"]
+	path = 2_databases/lab3-hibernate
+	url = https://github.com/huji-itmo/lab3-hibernate.git

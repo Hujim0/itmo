@@ -37,3 +37,6 @@ url = https://github.com/huji-itmo/calc3-integrals-numerical-method.git
 [submodule "4_computational_mathematics/comp-math-lab1"]
 	path = 4_computational_mathematics/comp-math-lab1
 	url = https://github.com/huji-itmo/comp-math-lab1.git
+[submodule "4_computer_system_architecture/csa_experiments"]
+	path = 4_computer_system_architecture/csa_experiments
+	url = https://github.com/huji-itmo/csa_experiments.git

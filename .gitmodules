@@ -43,3 +43,12 @@ url = https://github.com/huji-itmo/calc3-integrals-numerical-method.git
 [submodule "2_databases/lab3-hibernate"]
 	path = 2_databases/lab3-hibernate
 	url = https://github.com/huji-itmo/lab3-hibernate.git
+[submodule "4_optimization_methods/optimization-methods-lab2-3"]
+	path = 4_optimization_methods/optimization-methods-lab2-3
+	url = https://github.com/huji-itmo/optimization-methods-lab2-3.git
+[submodule "4_optimization_methods/optimization-methods-lab4-5"]
+	path = 4_optimization_methods/optimization-methods-lab4-5
+	url = https://github.com/huji-itmo/optimization-methods-lab4-5.git
+[submodule "4_optimization_methods/optimization-methods-lab6"]
+	path = 4_optimization_methods/optimization-methods-lab6
+	url = https://github.com/huji-itmo/optimization-methods-lab6.git
